@@ -1,0 +1,4 @@
+node_modules/
+__pycache__/
+tools/maths_*.json
+tools/prep/maths_*.json

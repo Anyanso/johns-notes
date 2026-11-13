@@ -1,0 +1,252 @@
+<title>CMPT 423 Midterm Prep</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column under a sticky exam-day bar; sections are a plan, topic cards, a question bank and a timed mock. Red-pen accent for marks and priorities. */
+:root{
+  --bg:#f1f3f6; --surface:#ffffff; --fg:#121826; --muted:#586277; --line:#d8dde6;
+  --accent:#c42f1c; --accent-soft:#fbe6e2; --ok:#17794a; --ok-soft:#dff2e8; --warn:#9a5b00; --warn-soft:#fbeed3;
+  --code-bg:#e9edf3; --ink2:#1d2a4a;
+  --f-head:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e121a; --surface:#161b26; --fg:#e7ebf3; --muted:#9aa5ba; --line:#2a3345;
+  --accent:#ff7461; --accent-soft:#3a1a16; --ok:#5fd596; --ok-soft:#14301f; --warn:#f0bf62; --warn-soft:#33270f;
+  --code-bg:#202838; --ink2:#c9d4f3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e121a; --surface:#161b26; --fg:#e7ebf3; --muted:#9aa5ba; --line:#2a3345;
+  --accent:#ff7461; --accent-soft:#3a1a16; --ok:#5fd596; --ok-soft:#14301f; --warn:#f0bf62; --warn-soft:#33270f;
+  --code-bg:#202838; --ink2:#c9d4f3; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surface);z-index:30}
+.wrap{max-width:880px;margin:0 auto}
+a{color:var(--accent)}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+h1,h2,h3,h4{font-family:var(--f-head);line-height:1.15;text-wrap:balance;margin:0}
+/* top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)));background:var(--surface);border-bottom:1px solid var(--line);
+  padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));display:flex;gap:6px 14px;align-items:center;flex-wrap:wrap;font-size:14px}
+.bar .nm{font-family:var(--f-head);font-weight:800;margin-right:auto;white-space:nowrap}
+.bar nav{display:flex;gap:2px 4px;flex-wrap:wrap}
+.bar nav a{color:var(--fg);text-decoration:none;padding:4px 9px;border-radius:6px}
+.bar nav a:hover{background:var(--accent-soft)}
+.prog{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);white-space:nowrap}
+.prog b{color:var(--ok)}
+/* hero */
+.hero{padding-block:34px 18px}
+.eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.hero h1{font-size:clamp(2.1rem,6.5vw,3.6rem);font-weight:800;margin:8px 0 10px}
+.hero p.lead{font-size:1.1rem;max-width:62ch;margin:0 0 18px;color:var(--fg)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:0;padding:0;list-style:none}
+.facts li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+.facts small{display:block;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.facts strong{font-family:var(--f-head);font-size:1.15rem}
+#cd{color:var(--accent)}
+section.blk{padding-block:30px 6px}
+section.blk>h2{font-size:clamp(1.5rem,4.2vw,2.1rem);font-weight:800;margin-bottom:6px}
+.sub{color:var(--muted);max-width:66ch;margin:0 0 16px}
+/* evidence */
+.ev{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.ev>div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
+.ev h4{font-size:1.02rem;margin-bottom:4px}
+.ev .tag{font-family:var(--f-mono);font-size:11.5px;color:var(--accent);letter-spacing:.05em;text-transform:uppercase}
+.ev p{margin:6px 0 0;font-size:.95rem}
+/* plan */
+.days{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:12px}
+.day{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
+.day header{display:flex;justify-content:space-between;gap:8px;font-family:var(--f-mono);font-size:12px}
+.day .when{color:var(--accent);font-weight:500}.day .dur{color:var(--muted)}
+.day h3{font-size:1.15rem;margin:8px 0 8px}
+.tasks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.tasks label{display:flex;gap:9px;align-items:flex-start;font-size:.94rem;cursor:pointer}
+.tasks input{margin-top:5px;accent-color:var(--accent);flex:none;width:17px;height:17px}
+.tasks input:checked+span{color:var(--muted);text-decoration:line-through}
+/* template */
+.tpl{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.tpl ol{margin:0;padding-left:1.2em;display:grid;gap:8px}
+.upd{background:var(--warn-soft);color:var(--fg);border:1px solid var(--warn);border-radius:10px;padding:10px 14px;margin:8px 0 0}
+.bonus{font-family:var(--f-mono);font-size:12px;color:var(--warn);background:var(--warn-soft);border-radius:6px;padding:3px 8px;margin:8px 0 0;display:inline-block}
+.worked{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:6px 16px 8px;margin-top:12px}
+.worked ol{padding-left:1.3em}
+.worked li{margin:6px 0}
+.katex-display{overflow-x:auto;overflow-y:hidden}
+.katex{font-size:1.06em}
+/* topics */
+.tools{display:flex;gap:8px;margin:0 0 10px;flex-wrap:wrap}
+button.pl,.tools button{font:inherit;font-size:.9rem;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer}
+button.pl:hover,.tools button:hover{border-color:var(--accent)}
+.topic{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
+.topic>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto;gap:2px 12px;align-items:center;padding:12px 14px}
+.topic>summary::-webkit-details-marker{display:none}
+.tn{grid-row:1/3;font-family:var(--f-head);font-weight:800;font-size:1.4rem;color:var(--muted);min-width:1.6ch}
+.tt{font-family:var(--f-head);font-weight:600;font-size:1.1rem}
+.tl{grid-column:2;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.chip{grid-row:1/3;grid-column:3;font-family:var(--f-mono);font-size:11.5px;padding:2px 8px;border-radius:99px;white-space:nowrap;border:1px solid var(--line)}
+.chip.high{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.chip.med{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.tb{padding:2px 16px 14px;border-top:1px solid var(--line)}
+.tb .why{color:var(--muted);margin:10px 0}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:4px 22px}
+.cols>div{min-width:0}
+.tb h4{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-family:var(--f-mono);color:var(--accent);margin:12px 0 4px}
+.tb ul{margin:0;padding-left:1.1em}.tb li{margin:3px 0}
+.fm div{background:var(--code-bg);border-radius:8px;padding:4px 10px;margin:4px 0;overflow-x:auto}
+.lesson{background:var(--bg);border-radius:10px;padding:2px 14px 6px;margin:10px 0}
+.lesson p{margin:8px 0}
+.read{font-size:.9rem;margin:12px 0 0}
+/* practice */
+.pnav{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px}
+.pnav a{font-family:var(--f-mono);text-decoration:none;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:3px 10px}
+.pnav a:hover{border-color:var(--accent)}
+.grp{padding-top:22px}
+.grp h3{font-size:1.3rem;display:flex;align-items:center;gap:10px}
+.gc{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--fg);color:var(--bg);font-family:var(--f-mono);font-size:15px}
+.gi{color:var(--muted);margin:4px 0 10px}
+.q,.long,.mc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px;min-width:0}
+.q.ok{border-color:var(--ok)}.q.miss{border-color:var(--accent)}
+.qh{display:flex;gap:8px;align-items:center;font-family:var(--f-mono);font-size:12px}
+.qid{font-weight:500;background:var(--code-bg);padding:1px 7px;border-radius:5px}
+.lvl{color:var(--muted)}
+.st{margin-left:auto;font-weight:500}
+.q.ok .st{color:var(--ok)}.q.miss .st{color:var(--accent)}
+.stem{margin:8px 0;overflow-wrap:anywhere}
+.stem ol,.ans ol{margin:6px 0;padding-left:1.4em}
+.q details>summary,.long details>summary{cursor:pointer;color:var(--accent);font-weight:500;font-size:.95rem;padding:4px 0}
+.ans{border-top:1px dashed var(--line);margin-top:6px;padding-top:6px;overflow-wrap:anywhere}
+.ans p{margin:6px 0}
+.mk{display:flex;gap:8px;margin-top:8px}
+.mk button{font:inherit;font-size:.9rem;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:8px;padding:5px 12px;cursor:pointer}
+.mk button[data-v=ok]:hover,.mk button.on[data-v=ok]{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.mk button[data-v=miss]:hover,.mk button.on[data-v=miss]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+/* mock */
+.clock{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:0 0 14px}
+#clk{font-family:var(--f-mono);font-size:1.9rem;font-weight:500;min-width:5ch}
+#clk.low{color:var(--accent)}
+.mc .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px}
+.opt{font:inherit;text-align:left;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;cursor:pointer;min-width:0}
+.opt:hover{border-color:var(--accent)}
+.opt.right{background:var(--ok-soft);border-color:var(--ok)}
+.opt.wrong{background:var(--accent-soft);border-color:var(--accent)}
+.mc p{margin:0 0 8px}.mc .why{margin:8px 0 0;color:var(--muted);font-size:.93rem}
+.score{font-family:var(--f-mono);color:var(--muted);margin:4px 0 14px}
+.long h4{font-size:1.1rem;margin-bottom:4px}
+.teams{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 16px}
+footer{margin-top:40px;color:var(--muted);font-size:.88rem;border-top:1px solid var(--line);padding-top:14px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:560px){.bar nav{order:3;width:100%}.bar .nm{margin-right:0}}
+/*KATEX*/
+<!--KATEX-->
+</style>
+<div class="wrap">
+<header class="bar"><span class="nm">CMPT 423 Midterm Prep</span><nav aria-label="Sections"><a href="#plan">Plan</a><a href="#recipe">Recipe</a><a href="#memorize">Memorize</a><a href="#topics">Topics</a><a href="#practice">Practice</a><a href="#mock">Mock exam</a></nav><span class="prog" id="prog" aria-live="polite"></span></header>
+
+<section class="hero">
+<div class="eyebrow">Midterm · Monday 16 November · 11:30 · ENG 2B53</div>
+<h1>Two days, one method.</h1>
+<p class="lead">Your professor says the assignments are the closest replica of the midterm. This guide teaches the one method behind both, walks the topics in the lectures and textbooks, and gives you 43 practice questions plus a timed mock exam with worked answers.</p>
+<ul class="facts">
+<li><small>Time left</small><strong id="cd">–</strong></li>
+<li><small>Format</small><strong>On paper, team of two</strong></li>
+<li><small>Allowed</small><strong>Simple calculator + reference sheet</strong></li>
+<li><small>Counts for</small><strong>10% of the course</strong></li>
+</ul>
+</section>
+
+<div class="upd"><strong>Update from your professor (Nov 12).</strong> Sequence models (Lectures 16–17) are <u>not</u> on the midterm. You will <u>not</u> be asked to derive gradients as in Assignment 2. A sheet with the equations and distributions is provided. The guide below has been trimmed to match.</div>
+<section class="blk" id="evidence"><h2>What the exam will look like</h2>
+<p class="sub">This is a reading of the evidence you have, not a leak of the paper. The tasks below are the ones to be ready for.</p>
+<div class="ev">
+<div><span class="tag">Assignment 2</span><h4>Count regression</h4><p>Pick a distribution for a count label, write $p(y|x;\theta)$ with an exp activation, derive the loss, then code and fit it. Steps 1–4 are pure exam material.</p></div>
+<div><span class="tag">Assignment 1</span><h4>Gaussians and GMM</h4><p>Gaussian maximum likelihood (mean, covariance), assigning points to the nearest mean, Cholesky sampling, the score, and why more clusters overfit.</p></div>
+<div><span class="tag">Midterm example</span><h4>Mean and variance from $x$</h4><p>Normal with $\mu=\theta_1^\top\phi$ and $\sigma^2=\exp(\theta_2^\top\phi)$. The sheet gives seven distributions and seven log and probability identities.</p></div>
+<div><span class="tag">Everything else</span><h4>Concept and short calculation</h4><p>Regularization as a prior, bias and variance, shapes in NumPy, neural-network counting, gradient descent behaviour. Multiple choice or long answer.</p></div>
+</div></section>
+
+<section class="blk" id="plan"><h2>Your two-day plan</h2>
+<p class="sub">Tick items as you go; the boxes remember your progress on this device. Split Saturday’s mock between you and your partner as one team.</p>
+<div class="days"><!--PLAN--></div></section>
+
+<section class="blk" id="recipe"><h2>The answer template</h2>
+<p class="sub">Almost every derivation question is these six steps. Learn them in order and write them on paper with these headings.</p>
+<div class="tpl"><ol><!--STEPS--></ol></div>
+<h3 style="margin:18px 0 0;font-size:1.15rem">Worked example: counts, as in Assignment 2</h3>
+<div class="worked"><!--WORKED--></div>
+<div class="teams" style="margin-top:12px"><h4 style="margin:10px 0 4px;font-size:1rem">Eight mistakes that cost marks</h4><!--MISTAKES--></div>
+</section>
+
+<section class="blk" id="memorize"><h2>What to memorize</h2>
+<p class="sub">Everything on this page and the cards below is enough for the exam; the Complete Study Notes are optional depth. First, what you must carry in your head and what the sheet gives you.</p>
+<div class="teams"><!--MEMORIZE--></div></section>
+
+<section class="blk" id="topics"><h2>Topic by topic</h2>
+<p class="sub">Eleven cards in lecture order. The priority tag is my estimate from the assignments and the sample, not the professor’s statement. Each card starts with a short lesson: read it, check the must-know list, then do its drill questions.</p>
+<div class="tools"><button type="button" id="openall">Open all</button><button type="button" id="closeall">Close all</button></div>
+<!--TOPICS--></section>
+
+<section class="blk" id="practice"><h2>Practice questions</h2>
+<p class="sub">Try each on paper before opening the answer. Then mark it Got it or Review again; the counter at the top follows you. Jump to a group:</p>
+<div class="pnav"><!--PNAV--></div>
+<!--PRACTICE-->
+<p style="margin-top:12px"><button type="button" class="pl" id="reset">Clear my marks and ticks</button></p></section>
+
+<section class="blk" id="mock"><h2>Mock exam</h2>
+<p class="sub"><!--MOCKINTRO--></p>
+<div class="clock"><span id="clk">50:00</span><button type="button" class="pl" id="go">Start</button><button type="button" class="pl" id="rs">Reset</button></div>
+<h3 style="margin:6px 0 8px;font-size:1.2rem">Part 1: multiple choice (10 marks)</h3>
+<div id="mcs"><!--MC--></div><p class="score" id="mcscore"></p>
+<h3 style="margin:14px 0 8px;font-size:1.2rem">Part 2: long answer (40 marks)</h3>
+<!--LONG-->
+<footer>Made from the CMPT 423 lectures, the two assignments, the midterm example and Murphy (2022) and Bishop (2006). Check anything you doubt against the Complete Study Notes and your own lecture slides. Page numbers are Murphy’s printed pages.</footer>
+</section>
+</div>
+<script>
+(function(){
+var LS=null;try{LS=window.localStorage;LS.setItem('t','1');LS.removeItem('t')}catch(e){LS=null}
+function get(k){try{return LS?LS.getItem(k):null}catch(e){return null}}
+function put(k,v){try{if(LS){if(v===null)LS.removeItem(k);else LS.setItem(k,v)}}catch(e){}}
+var qs=[].slice.call(document.querySelectorAll('.q'));
+function prog(){var ok=0,miss=0;qs.forEach(function(q){var s=q.classList.contains('ok')?1:q.classList.contains('miss')?2:0;if(s==1)ok++;if(s==2)miss++});
+  document.getElementById('prog').innerHTML='<b>'+ok+'</b>/'+qs.length+' got it · '+miss+' to review'}
+function paint(q,v){q.classList.remove('ok','miss');var st=q.querySelector('.st');st.textContent='';
+  [].forEach.call(q.querySelectorAll('.mk button'),function(b){b.classList.toggle('on',b.dataset.v===v)});
+  if(v==='ok'){q.classList.add('ok');st.textContent='got it'}if(v==='miss'){q.classList.add('miss');st.textContent='review'}}
+qs.forEach(function(q){var id=q.dataset.id,v=get('q-'+id);if(v)paint(q,v);
+  q.querySelector('.mk').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var nv=b.dataset.v;
+    if(get('q-'+id)===nv)nv=null;put('q-'+id,nv);paint(q,nv);prog()})});
+[].forEach.call(document.querySelectorAll('input[data-k]'),function(c){c.checked=get(c.dataset.k)==='1';
+  c.addEventListener('change',function(){put(c.dataset.k,c.checked?'1':null)})});
+prog();
+document.getElementById('reset').addEventListener('click',function(){
+  qs.forEach(function(q){put('q-'+q.dataset.id,null);paint(q,null)});
+  [].forEach.call(document.querySelectorAll('input[data-k]'),function(c){c.checked=false;put(c.dataset.k,null)});prog()});
+document.getElementById('openall').addEventListener('click',function(){[].forEach.call(document.querySelectorAll('.topic'),function(d){d.open=true})});
+document.getElementById('closeall').addEventListener('click',function(){[].forEach.call(document.querySelectorAll('.topic'),function(d){d.open=false})});
+// links to a topic's drill open the practice list
+// countdown to 11:30 CST (UTC-6) on 16 Nov 2026
+function cd(){var t=Date.UTC(2026,10,16,17,30)-Date.now(),el=document.getElementById('cd');
+  if(t<=0){el.textContent='Exam time';return}
+  var d=Math.floor(t/864e5),h=Math.floor(t%864e5/36e5);el.textContent=d+' d '+h+' h'}
+cd();setInterval(cd,60000);
+// mock multiple choice
+var mcs=[].slice.call(document.querySelectorAll('.mc')),done=0,sc=0;
+mcs.forEach(function(m){m.addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||m.dataset.d)return;m.dataset.d=1;done++;
+  [].forEach.call(m.querySelectorAll('.opt'),function(o){if(o.dataset.c==='1')o.classList.add('right')});
+  if(b.dataset.c==='1')sc++;else b.classList.add('wrong');
+  m.querySelector('.why').hidden=false;
+  document.getElementById('mcscore').textContent=sc+' / '+mcs.length+' correct so far ('+done+' answered)'})});
+// timer
+var left=3000,iv=null,clk=document.getElementById('clk'),go=document.getElementById('go');
+function show(){var m=Math.floor(left/60),s=left%60;clk.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;clk.classList.toggle('low',left<=300)}
+go.addEventListener('click',function(){if(iv){clearInterval(iv);iv=null;go.textContent='Resume';return}
+  go.textContent='Pause';iv=setInterval(function(){left--;show();if(left<=0){clearInterval(iv);iv=null;go.textContent='Start'}},1000)});
+document.getElementById('rs').addEventListener('click',function(){if(iv){clearInterval(iv);iv=null}left=3000;go.textContent='Start';show()});
+})();
+</script>
