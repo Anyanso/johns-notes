@@ -139,6 +139,9 @@ button.pl:hover,.tools button:hover{border-color:var(--accent)}
 .mc p{margin:0 0 8px}.mc .why{margin:8px 0 0;color:var(--muted);font-size:.93rem}
 .score{font-family:var(--f-mono);color:var(--muted);margin:4px 0 14px}
 .long h4{font-size:1.1rem;margin-bottom:4px}
+.wt{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:.95rem}.wt th,.wt td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}.wt th{color:var(--muted);font-weight:600}.wt tr.hl td{font-weight:600}
+.qa{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 14px;margin-bottom:10px;min-width:0}.qa details>summary{cursor:pointer;color:var(--accent);font-weight:500;padding:4px 0}
+.walk h3{margin:20px 0 4px;font-size:1.1rem}
 .teams{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 16px}
 footer{margin-top:40px;color:var(--muted);font-size:.88rem;border-top:1px solid var(--line);padding-top:14px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -147,7 +150,7 @@ footer{margin-top:40px;color:var(--muted);font-size:.88rem;border-top:1px solid 
 <!--KATEX-->
 </style>
 <div class="wrap">
-<header class="bar"><span class="nm">CMPT 423 Midterm Prep</span><nav aria-label="Sections"><a href="#plan">Plan</a><a href="#recipe">Recipe</a><a href="#memorize">Memorize</a><a href="#topics">Topics</a><a href="#practice">Practice</a><a href="#mock">Mock exam</a></nav><span class="prog" id="prog" aria-live="polite"></span></header>
+<header class="bar"><span class="nm">CMPT 423 Midterm Prep</span><nav aria-label="Sections"><a href="#plan">Plan</a><a href="#recipe">Recipe</a><a href="#walkthrough">Walkthrough</a><a href="#memorize">Memorize</a><a href="#topics">Topics</a><a href="#practice">Practice</a><a href="#mock">Mock exam</a></nav><span class="prog" id="prog" aria-live="polite"></span></header>
 
 <section class="hero">
 <div class="eyebrow">Midterm · Monday 16 November · 11:30 · ENG 2B53</div>
@@ -181,6 +184,61 @@ footer{margin-top:40px;color:var(--muted);font-size:.88rem;border-top:1px solid 
 <h3 style="margin:18px 0 0;font-size:1.15rem">Worked example: counts, as in Assignment 2</h3>
 <div class="worked"><!--WORKED--></div>
 <div class="teams" style="margin-top:12px"><h4 style="margin:10px 0 4px;font-size:1rem">Eight mistakes that cost marks</h4><!--MISTAKES--></div>
+</section>
+
+<section class="blk walk" id="walkthrough"><h2>Guided walkthrough: the seed problem</h2>
+<p class="sub">One full derivation, built step by step, with the questions and mix-ups that came up while learning it. Do it on paper with the problem open, then compare with the model answer at the end.</p>
+<div class="worked"><p><b>The problem.</b> A gardener plants $n=10$ seeds in each of $D$ pots, $i=1,\dots,D$. Pot $i$ gets water $x_i$ and the gardener counts $k_i$, the number of seeds that germinate. Pots are independent. The features are $\boldsymbol\phi(x_i)=(1,x_i)$. Build the model and write the loss.</p></div>
+
+<h3>Before Step 1: ask what kind of label it is</h3>
+<p>Run three questions on the label: <b>whole numbers? negative? a maximum?</b></p>
+<table class="wt"><thead><tr><th>Label</th><th>Distribution</th><th>Why</th></tr></thead><tbody>
+<tr><td>Goals in a match</td><td>Poisson</td><td>whole, never negative, no maximum</td></tr>
+<tr><td>Noon temperature in °C</td><td>Normal</td><td>any real number, negatives allowed</td></tr>
+<tr><td>One seed germinates</td><td>Bernoulli</td><td>two outcomes, 0 or 1</td></tr>
+<tr class="hl"><td>Seeds germinating out of 10</td><td>Binomial</td><td>whole, never negative, maximum 10</td></tr>
+</tbody></table>
+
+<h3>Step 1: choose the distribution</h3>
+<p>The label $k_i$ is a count from 0 to 10, so it is <b>Binomial</b> with two parameters: the number of tries $n=10$ (known and fixed) and the success chance $p$ (unknown). The count $k$ is the <i>outcome</i>, not a parameter. From the sheet, $P(k)=\binom{n}{k}p^k(1-p)^{n-k}$.</p>
+<p><b>Common mix-up: Bernoulli vs Binomial.</b> Bernoulli is a single trial ($n=1$) with outcome 0 or 1. Binomial is $n$ trials counted up, with outcome $0,\dots,n$. A Binomial with $n=1$ is a Bernoulli. One coin flip is Bernoulli; ten flips counting heads is Binomial.</p>
+
+<h3>Step 2: make the parameter depend on the input</h3>
+<p>Only $p$ changes with the water ($n$ is always 10). Use the standard pattern $p=a(\boldsymbol\theta^\top\boldsymbol\phi(x))$. $p$ is a probability, so it must stay in $[0,1]$, and the sigmoid does that for any score: $p_i=\sigma(\boldsymbol\theta^\top\boldsymbol\phi(x_i))=\sigma(\theta_0+\theta_1x_i)$. The flow is: $x$ → $\boldsymbol\phi(x)=(1,x)$ → score $\theta_0+\theta_1x$ → sigmoid → $p$.</p>
+<p><b>What each symbol is.</b> $\boldsymbol\theta$ holds the unknown weights that we learn. $\boldsymbol\phi(x)$ is not the model; it is a fixed rewriting of $x$ as a list of numbers (given in the question). The dot product is $\theta_0\cdot1+\theta_1\cdot x_i$. If $\boldsymbol\phi$ is not spelled out in the question, keep $\boldsymbol\theta^\top\boldsymbol\phi(x_i)$ as written and carry $p_i$ through.</p>
+
+<h3>Step 3: likelihood and log</h3>
+<p>For one pot: $P(k_i\mid x_i;\boldsymbol\theta)=\binom{10}{k_i}p_i^{k_i}(1-p_i)^{10-k_i}$. Read it as: the probability of count $k_i$, for the pot with water $x_i$, if the weights were $\boldsymbol\theta$. The $x_i$ is observed input; $\boldsymbol\theta$ (after the semicolon) is the unknown parameter.</p>
+<p><b>Why do this for all pots?</b> One $\boldsymbol\theta$ must explain every pot. <i>Likelihood</i> means the probability of the data we actually observed, as a function of $\boldsymbol\theta$. The data is fixed; we try different $\boldsymbol\theta$ and keep the one that makes the observed counts most probable. Independent pots multiply:</p>
+$$P(k_1,\dots,k_D\mid x_1,\dots,x_D;\boldsymbol\theta)=\prod_{i=1}^{D}P(k_i\mid x_i;\boldsymbol\theta).$$
+<p>Take the log (identity 1: the log of a product is a sum of logs; the best $\boldsymbol\theta$ does not move because log is increasing):</p>
+$$\sum_{i=1}^{D}\log\Big[\tbinom{10}{k_i}p_i^{k_i}(1-p_i)^{10-k_i}\Big].$$
+<p>Split it with identity 1 and bring the exponents down with identity 2 ($\log a^b=b\log a$):</p>
+$$\sum_{i=1}^{D}\Big[\log\tbinom{10}{k_i}+k_i\log p_i+(10-k_i)\log(1-p_i)\Big].$$
+
+<h3>Step 4: the loss</h3>
+<p>Negate (the loss is the negative log-likelihood) and drop $\log\binom{10}{k_i}$, which contains no $\boldsymbol\theta$ so it cannot change the minimizer:</p>
+$$J(\boldsymbol\theta)=-\sum_{i=1}^{D}\Big[k_i\log p_i+(10-k_i)\log(1-p_i)\Big],\qquad p_i=\sigma(\boldsymbol\theta^\top\boldsymbol\phi(x_i)).$$
+<p>This is the binary cross-entropy from logistic regression, with $k_i$ successes and $10-k_i$ failures per pot.</p>
+
+<h3>Number check</h3>
+<p>With $\boldsymbol\theta=(0,1)$ and $x=2$: score $=0+1\cdot2=2$; $p=\sigma(2)=\frac{1}{1+e^{-2}}=0.881$; expected germinated seeds $=np=10(0.881)=8.8$ (an expected value need not be whole). Sanity check: $p=0.88$ means about 9 of 10 grow.</p>
+
+<h3>Model answer to write in the exam</h3>
+<div class="worked"><ol>
+<li><b>Distribution:</b> Binomial, $n=10$ known; $k_i$ is whole, non-negative and capped at 10.</li>
+<li><b>Model:</b> $p_i=\sigma(\boldsymbol\theta^\top\boldsymbol\phi(x_i))$, because $p_i\in[0,1]$.</li>
+<li><b>Log-likelihood</b> (independent pots): $\sum_i\big[\log\binom{10}{k_i}+k_i\log p_i+(10-k_i)\log(1-p_i)\big]$.</li>
+<li><b>Loss:</b> $J(\boldsymbol\theta)=-\sum_i\big[k_i\log p_i+(10-k_i)\log(1-p_i)\big]$; $\log\binom{10}{k_i}$ is dropped because it does not depend on $\boldsymbol\theta$.</li>
+</ol></div>
+
+<h3>Questions that came up</h3>
+<div class="qa"><details><summary>Does each distribution belong to one regression?</summary><div class="ans"><p>The distribution models the label. Linear regression is the Normal with its mean made to depend on the input; logistic regression is the Bernoulli with $p=\sigma(\cdot)$; softmax regression is the Categorical; Poisson regression is the Poisson with $\lambda=\exp(\cdot)$. The pairing comes from the label type, not from a fixed rule. You choose the distribution that fits the label, and the model name follows.</p></div></details></div>
+<div class="qa"><details><summary>Why Poisson for customer counts but Normal for scores?</summary><div class="ans"><p>Counts are whole, never negative and have no maximum, which is the Poisson. A Normal would give probability to 2.5 or −4 customers. Scores are fine-grained and sit well inside their limits, so the Normal is an acceptable approximation. No model is perfect; pick the one whose mismatch matters least. The Poisson's mean $\lambda$ can be a decimal (3.004) even though each day's count is whole.</p></div></details></div>
+<div class="qa"><details><summary>Would the Poisson or the Normal work for the seed counts?</summary><div class="ans"><p>No. The Normal allows any real number: negatives, decimals and values above 10. The Poisson allows 11, 12 and more, but only 10 seeds were planted. The Binomial is the one that stops at the known number of tries.</p></div></details></div>
+<div class="qa"><details><summary>What exactly is the likelihood?</summary><div class="ans"><p>The probability of the observed data, viewed as a function of $\boldsymbol\theta$. It does not choose the data; the data is fixed. Coin example: 7 heads in 10 flips. For $p=0.1$ that result is very unlikely, for $p=0.5$ it is plausible, and for $p=0.7$ it is most probable, so maximum likelihood picks $\hat p=0.7$.</p></div></details></div>
+<div class="qa"><details><summary>Sigmoid or softmax?</summary><div class="ans"><p>Count how many probabilities the parameter needs. One probability (Bernoulli or Binomial) uses the sigmoid. A probability for each of $C\ge3$ classes (Categorical) uses softmax, which outputs a list that sums to 1. With exactly two classes softmax reduces to the sigmoid. A positive rate or variance uses exp; a plain mean uses no activation.</p></div></details></div>
+<div class="qa"><details><summary>Will $p=a(\boldsymbol\theta^\top\boldsymbol\phi(x))$ be given on the exam?</summary><div class="ans"><p>Do not count on it. The sheet gives the distributions and identities. The features $\boldsymbol\phi(x)$ are usually stated in the question. The pattern is the standard form from the course, and choosing the activation is your job. If $\boldsymbol\phi$ is not spelled out, keep $\boldsymbol\theta^\top\boldsymbol\phi(x_i)$ and carry $p_i$.</p></div></details></div>
 </section>
 
 <section class="blk" id="memorize"><h2>What to memorize</h2>
