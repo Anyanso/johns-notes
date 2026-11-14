@@ -399,6 +399,7 @@ MEMORIZE = [
   r"Sigmoid $\sigma(z)=\frac1{1+e^{-z}}$; softmax $\frac{e^{z_k}}{\sum_je^{z_j}}$.",
   r"MSE $=\frac1D\sum(y_i-\hat y_i)^2$; least squares $\hat{\boldsymbol\theta}=(\mathbf X^\top\mathbf X)^{-1}\mathbf X^\top\mathbf y$.",
   r"Loss $=-\sum\log p(y_i|x_i;\boldsymbol\theta)$; Bernoulli NLL $-[y\log p+(1-y)\log(1-p)]$.",
+  r"Full Normal density (the sheet only gives $\propto$): $\frac1{\sqrt{2\pi\sigma^2}}\exp\!\big(-\frac{(y-\mu)^2}{2\sigma^2}\big)$. The constant $\frac1{\sqrt{2\pi\sigma^2}}$ must be kept whenever $\sigma^2$ depends on the input; its log is $-\frac12\log2\pi-\frac12\log\sigma^2$.",
   r"Gaussian MLE: mean, and variance with $1/n$; covariance $\frac1n\sum(\mathbf x-\hat{\boldsymbol\mu})(\mathbf x-\hat{\boldsymbol\mu})^\top$.",
   r"Precision $\frac{TP}{TP+FP}$, recall $\frac{TP}{TP+FN}$, $F_1=\frac{2PR}{P+R}$, FPR $\frac{FP}{FP+TN}$, accuracy.",
   r"SEM $=\hat\sigma/\sqrt n$; 95% $\approx\pm1.96$ SEM; entropy $-\sum p\log p$.",
