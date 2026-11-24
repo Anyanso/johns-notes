@@ -4,7 +4,7 @@
 DAYS = [
  ("Tue Nov 24 – Sun Nov 29", "2–3 h a day", "New material, your midterm, and the foundations", [
   "Get your marked midterm back. Redo every question you lost marks on, from a blank page, until you can do it without looking.",
-  "Learn the two topics the midterm skipped: card 10 (sequence models, L16–17) and card 13 (SVMs, L20). Then practice groups K and L.",
+  "Learn the two topics the midterm skipped: card 10 (sequence models, L16–17) and card 13 (SVMs, L20). Then practice groups K and L. Also read the Git card (L05) and do group M (20 minutes).",
   "Topics 1–4 (tensors, probability, MLE, linear algebra). Read each card, then practice groups C, D, B.",
   "Add any new lecture (e.g. PCA) to your notes as it is posted.",
  ]),
@@ -14,8 +14,9 @@ DAYS = [
   "Mark every question Got it or Review. The readiness panel at the bottom counts them for you.",
  ]),
  ("Fri Dec 4 – Sat Dec 5", "3–4 h a day", "The recipe, regularization, networks, optimization", [
-  "Practice group A, all of it, on paper: the recipe is the most likely long-answer question.",
+  "Practice groups A and P, all of them, on paper: the recipe is the most likely long-answer question, and it may start from a graph.",
   "Topics 8, 9 and 11 (MAP/ridge/lasso, neural networks, gradient descent). Practice groups H, I, J.",
+  "The gradients card and practice group N: every derivation, on paper, from a blank page.",
   "Topic 12 (the L19 example) and a second pass through groups K and L.",
  ]),
  ("Sun Dec 6", "3.5 h", "Full mock exam", [
@@ -34,7 +35,7 @@ DAYS = [
 ]
 
 TEMPLATE_STEPS = [
- ("Pick the distribution", "Look at the label $y$. Real number: Normal. Two classes: Bernoulli. Many classes: Categorical. Count with no upper limit: Poisson. Successes out of $n$ tries: Binomial. Positive duration: Weibull. Write at most one sentence of reason (whole numbers? never negative? bounded?)."),
+ ("Pick the distribution", "If the question gives a plot instead of words, read it: what values the label takes (axis), the shape of the trend, and whether the spread changes. Then look at the label $y$. Real number: Normal. Two classes: Bernoulli. Many classes: Categorical. Count with no upper limit: Poisson. Successes out of $n$ tries: Binomial. Positive duration: Weibull. Write at most one sentence of reason (whole numbers? never negative? bounded?)."),
  ("Parameterize with the input", "Name the distribution's parameter(s) and make each a function of the features. The activation $a$ must keep the parameter in its allowed range: sigmoid for $p\\in[0,1]$, exp for a rate or variance $>0$, identity for a mean. Example: $\\lambda=a(\\boldsymbol\\theta^\\top\\boldsymbol\\phi(x))=\\exp(\\boldsymbol\\theta^\\top\\boldsymbol\\phi(x))$."),
  ("Write the likelihood and take the log", "Independent points: $p(\\mathcal D|\\boldsymbol\\theta)=\\prod_i p(y_i|x_i;\\boldsymbol\\theta)$. Then $\\log$ turns the product into a sum (sheet identity 1). Use sheet identities 2 and 3 to simplify, and keep every term that contains $\\boldsymbol\\theta$."),
  ("Negate to get the loss", "$J(\\boldsymbol\\theta)=-\\sum_i\\log p(y_i|x_i;\\boldsymbol\\theta)$. You may drop terms that do not contain $\\boldsymbol\\theta$ (like $\\log y!$ or $\\tfrac12\\log2\\pi$). Say that you dropped them."),
@@ -66,7 +67,7 @@ TOPICS = [
    "Why code is vectorized (no Python loops over data)."],
   ["$(D,n)\\cdot(n,)\\to(D,)$","$(D,n)^\\top(D,)\\to(n,)$"],
   ["Subtracting a $(D,)$ vector from a $(D,1)$ array gives $(D,D)$, not $(D,)$.","<code>sum(axis=1)</code> removes axis 1 (the columns), it does not sum the columns of each row separately."],
-  "Lecture 02; Murphy §7.2 p.242 for the matrix-product ideas.", "C1–C9"),
+  "Lecture 02; Murphy §7.2 p.242 for the matrix-product ideas.", "C1–C10"),
  ("t2","Probability and distributions","L03","High",
   "Every question starts by choosing or reading a distribution. The reference sheet lists seven.",
   ["Random variable, PMF vs PDF, independence, expectation and variance.",
@@ -74,7 +75,7 @@ TOPICS = [
    "Bernoulli, Categorical, Binomial, Poisson, Normal, Beta, Weibull: support and parameters, and which label type each fits."],
   ["$p(a|b)=\\dfrac{p(b|a)p(a)}{p(b)}$","$\\mathbb E[X]=\\sum xp(x)$, $\\text{Var}(X)=\\mathbb E[X^2]-\\mathbb E[X]^2$"],
   ["A density can exceed 1; a probability cannot.","$P(D|+)$ is not $P(+|D)$."],
-  "Lecture 03; Murphy §2.2 p.35, §2.3 p.44, §2.4 p.49, §2.5 p.53, §2.6 p.57.", "A1, D1–D10"),
+  "Lecture 03; Murphy §2.2 p.35, §2.3 p.44, §2.4 p.49, §2.5 p.53, §2.6 p.57.", "A1, P1–P12, D1–D12"),
  ("t3","Maximum likelihood","L04","High",
   "This is the heart of the course. Assignment 2, the midterm example and most long answers are this topic.",
   ["The recipe: likelihood → log → negate → loss. Loss = negative log-likelihood.",
@@ -83,7 +84,16 @@ TOPICS = [
    "Keep every term that contains a parameter. Drop only true constants."],
   ["$\\hat\\mu=\\frac1n\\sum x_i$, $\\hat\\sigma^2=\\frac1n\\sum(x_i-\\hat\\mu)^2$","$J=-\\sum_i\\log p(y_i|x_i;\\boldsymbol\\theta)$"],
   ["Dropping $\\frac12\\log\\sigma^2$ when $\\sigma^2$ depends on the input (the handwritten midterm example does this).","Calling $\\sigma^2$ the standard deviation."],
-  "Lecture 04; Murphy §4.2 p.107, §4.2.3 p.110, §4.2.5 p.111, §4.2.6 p.112.", "A1–A12, B1, D2–D6, D10"),
+  "Lecture 04; Murphy §4.2 p.107, §4.2.3 p.110, §4.2.5 p.111, §4.2.6 p.112.", "A1–A12, B1, D2–D6, D10, D12, N2"),
+ ("tgit","Git and GitLab","L05","Low–Medium",
+  r"How the assignments are handed in. Expect a short question on commands, branches or why a commit hash is submitted.",
+  [r"Why version control: many small tracked steps. Commit, branch, clone, add, push, <code>origin</code>.",
+   r"Course setup: private GitLab group; <code>main</code> is read-only starter code; all work goes on <code>solution</code>; never merge.",
+   r"A work session: <code>clone → checkout -b solution → edit → status → add → commit → push -u origin solution</code>.",
+   r"Submit the 40-character commit hash of the intended snapshot (<code>git log --oneline</code>, <code>git rev-parse HEAD</code>)."],
+  [],
+  [r"Committing on <code>main</code>: you cannot push there; move the work to <code>solution</code>.",r"<code>commit -am</code> stages modified tracked files only, not new ones."],
+  r"Lecture 05.", "M1–M6"),
  ("t4","Linear algebra","L06","Medium",
   "Needed for normal equations, covariance, Cholesky sampling and gradient shapes.",
   ["Matrix–vector and matrix–matrix products, transpose, inverse, norms.",
@@ -91,7 +101,7 @@ TOPICS = [
    "Eigenvalues and condition number $\\lambda_{\\max}/\\lambda_{\\min}$; least squares $\\hat{\\boldsymbol\\theta}=(\\mathbf X^\\top\\mathbf X)^{-1}\\mathbf X^\\top\\mathbf y$."],
   ["$(\\mathbf{AB})^\\top=\\mathbf B^\\top\\mathbf A^\\top$","$\\Sigma=\\mathbf L\\mathbf L^\\top$"],
   ["$\\mathbf X^\\top\\mathbf X$ is singular when features are dependent or $D<n$.","Cholesky $\\mathbf L$ is lower triangular, so multiply $\\mathbf L\\mathbf z$, not $\\mathbf z\\mathbf L$."],
-  "Lecture 06; Murphy §7.6.3 p.266 (Cholesky), §7.7.3 p.268 (least squares), §7.8 p.269.", "B1–B9, E3–E10"),
+  "Lecture 06; Murphy §7.6.3 p.266 (Cholesky), §7.7.3 p.268 (least squares), §7.8 p.269.", "B1–B9, E3–E11"),
  ("t5","Linear regression","L07","High",
   "Normal label, identity activation. Appears directly and as the model behind the others.",
   ["$y=\\boldsymbol\\theta^\\top\\boldsymbol\\phi(x)+\\varepsilon$, $\\varepsilon\\sim\\mathcal N(0,\\sigma^2)$ gives MSE as the loss.",
@@ -99,7 +109,7 @@ TOPICS = [
    "Basis functions $\\boldsymbol\\phi$: polynomial features, and how too many cause overfitting."],
   ["$\\nabla\\text{MSE}=\\frac2D\\mathbf X^\\top(\\mathbf X\\boldsymbol\\theta-\\mathbf y)$"],
   ["Mixing $\\frac1D$ and $\\frac12$ conventions: the minimizer is the same, the gradient differs by a factor."],
-  "Lecture 07; Murphy §4.2.7 p.114, §11.2 p.371.", "E1–E6, A8"),
+  "Lecture 07; Murphy §4.2.7 p.114, §11.2 p.371.", "E1–E6, A8, N1"),
  ("t6","Logistic and softmax regression","L08, L09","High",
   "Bernoulli and Categorical labels. The gradient is again (prediction − truth) × input.",
   ["Sigmoid $\\sigma(z)=\\frac1{1+e^{-z}}$, decision boundary $\\boldsymbol\\theta^\\top\\mathbf x=0$.",
@@ -107,7 +117,7 @@ TOPICS = [
    "Precision, recall, F1, accuracy, false-positive rate from a confusion matrix."],
   ["$\\nabla J=\\frac1D\\sum(\\sigma(\\boldsymbol\\theta^\\top\\mathbf x_i)-y_i)\\mathbf x_i$","$\\text{softmax}(\\mathbf z)_k=\\frac{e^{z_k}}{\\sum_je^{z_j}}$","$F_1=\\frac{2PR}{P+R}$"],
   ["The slide’s $F_\\beta$ formula has a sign error: it is $(1+\\beta^2)\\frac{PR}{\\beta^2P+R}$.","Fallout is $\\frac{FP}{FP+TN}$."],
-  "Lectures 08–09; Murphy §2.4.2 p.50, §2.4.3 p.52, §5.1.2 p.169, §2.5.2 p.54, §10.3 p.350.", "F1–F10, A7, A9"),
+  "Lectures 08–09; Murphy §2.4.2 p.50, §2.4.3 p.52, §5.1.2 p.169, §2.5.2 p.54, §10.3 p.350.", "F1–F11, A7, A9, N4–N5"),
  ("t7","Generalization and experiments","L10, L11, L12","Medium",
   "Train/validation/test, bias–variance, cross-validation, error bars, entropy.",
   ["Overfitting vs underfitting from train and validation error. The test set is used once.",
@@ -116,7 +126,7 @@ TOPICS = [
    "Entropy $H=-\\sum p\\log p$, cross-entropy."],
   ["$\\text{SEM}=\\hat\\sigma/\\sqrt n$","$H(p)=-\\sum_xp(x)\\log p(x)$"],
   ["Touching ±1-SEM bars are not a 5% test.","Do not tune on the test set."],
-  "Lectures 10–12; Murphy §1.2.3 p.12, §4.5.4 p.124, §4.5.5 p.125, §2.8.6 p.72, §6.1 p.207.", "G1–G10"),
+  "Lectures 10–12; Murphy §1.2.3 p.12, §4.5.4 p.124, §4.5.5 p.125, §2.8.6 p.72, §6.1 p.207.", "G1–G15"),
  ("t8","Bayes, MAP and regularization","L13, L14","High",
   "A prior adds a penalty to the loss. Likely to be asked as ‘which prior gives which penalty’.",
   ["MAP = maximize likelihood × prior = minimize loss $-\\log p(\\boldsymbol\\theta)$ added.",
@@ -125,7 +135,7 @@ TOPICS = [
    "Ridge: $(\\mathbf X^\\top\\mathbf X+\\lambda\\mathbf I)^{-1}\\mathbf X^\\top\\mathbf y$. Lasso: soft thresholding."],
   ["$J=\\text{loss}+\\lambda\\|\\boldsymbol\\theta\\|_2^2$ (ridge)","$\\text{soft}(c,t)=\\text{sign}(c)\\max(|c|-t,0)$"],
   ["The data term in the ridge loss must be squared: $\\|\\mathbf y-\\mathbf X\\boldsymbol\\theta\\|_2^2$.","Do not regularize the bias unless told to."],
-  "Lectures 13–14; Murphy §2.3 p.44, §2.7.4 p.63, §4.5.1 p.121, §11.3 p.381, §11.4 p.385.", "H1–H9, D2"),
+  "Lectures 13–14; Murphy §2.3 p.44, §2.7.4 p.63, §4.5.1 p.121, §11.3 p.381, §11.4 p.385.", "H1–H10, D2, N6–N7, N10"),
  ("t9","Neural networks","L15","Medium",
   "Learned basis functions. Expect parameter counts, a forward pass and the reasons for each design choice.",
   ["Perceptron rule and why XOR needs a hidden layer.",
@@ -134,7 +144,7 @@ TOPICS = [
    "Backpropagation as the chain rule; vanishing gradients; dropout, weight decay, early stopping."],
   ["$\\sigma'=\\sigma(1-\\sigma)\\le\\frac14$","$\\tanh x=2\\sigma(2x)-1$"],
   ["At test time dropout multiplies by the keep probability $1-p$.","Without non-linear activations, many layers collapse to one linear map."],
-  "Lecture 15; Murphy §13.2 p.426, §13.3 p.438, §13.4 p.446.", "I1–I10"),
+  "Lecture 15; Murphy §13.2 p.426, §13.3 p.438, §13.4 p.446.", "I1–I12, N8"),
  (r"t10",r"Sequence models",r"L16, L17",r"Medium",
   r"Skipped on the midterm, so expect at least one question: Markov chains, marginalizing a hidden state, an RNN step, attention weights, and how LLMs are trained.",
   [r"Markov chain $p(X_{t+1}|X_{0:t})=p(X_{t+1}|X_t)$; propagate a distribution with the transition matrix; a DFA state as memory.",
@@ -143,7 +153,7 @@ TOPICS = [
    r"Attention $\mathbf z_t=\sum_i\text{softmax}(\mathbf q_t^\top\mathbf k_i/\sqrt d)\,\mathbf v_i$; causal mask; positional encodings; quadratic cost; LLM = MLE with teacher forcing, autoregressive rollout, perplexity."],
   [r"$p(y)=\sum_hp(y|h)p(h)$",r"$\mathbf z_t=\sum_i\mathbf p_t(i)\mathbf v_i$, $\mathbf p_t=\text{softmax}(\mathbf q_t^\top\mathbf k_i/\sqrt d)$",r"$\text{perplexity}=\exp(\text{mean NLL})$"],
   [r"Forgetting to sum over hidden sequences (the largest single path is the Viterbi path, not the probability).",r"Each attention row sums to 1; the causal mask hides the future, not the past.",r"Shared RNN weights: the parameter count does not grow with sequence length."],
-  r"Lectures 16–17; Murphy §3.6.1.2 p.101, §15.2 p.503 (RNNs), §15.4–15.5 (attention, transformers); Bishop §13.1–13.2.", r"K1–K13"),
+  r"Lectures 16–17; Murphy §3.6.1.2 p.101, §15.2 p.503 (RNNs), §15.4–15.5 (attention, transformers); Bishop §13.1–13.2.", r"K1–K14, N11"),
  ("t11","Gradient descent","L18","High",
   "Concepts, hand-steps and derivations. Be ready to derive a gradient, read one and run an update.",
   ["Update $\\boldsymbol\\theta\\leftarrow\\boldsymbol\\theta-\\alpha\\nabla J$. Learning-rate behaviour: too high diverges, low is slow.",
@@ -152,7 +162,16 @@ TOPICS = [
    "Autodiff: forward pass stores values, backward pass multiplies local derivatives."],
   ["$\\boldsymbol\\theta_{t+1}=\\boldsymbol\\theta_t-\\alpha\\nabla J$","$\\mathbf m_t=\\beta\\mathbf m_{t-1}+\\mathbf g_t$"],
   ["For convex functions the chord lies above the curve.","SGD’s gradient is unbiased but noisy; its noise falls as the batch grows."],
-  "Lecture 18; Murphy §8.1.3 p.277, §8.2 p.282, §8.2.4 p.287, §8.4 p.292.", "J1–J10"),
+  "Lecture 18; Murphy §8.1.3 p.277, §8.2 p.282, §8.2.4 p.287, §8.4 p.292.", "J1–J11, N13"),
+ ("tgrad","Gradients and matrix calculus","all lectures","High",
+  r"Assume any loss in the course can be asked with its gradient. These rules and patterns cover every derivation on this page.",
+  [r"Chain rule through the score: $\frac{\partial J}{\partial\boldsymbol\theta}=\sum_i\frac{\partial J}{\partial z_i}\boldsymbol\phi_i$ with $z_i=\boldsymbol\theta^\top\boldsymbol\phi_i$.",
+   r"Matrix rules: $\nabla(\mathbf a^\top\boldsymbol\theta)=\mathbf a$, $\nabla(\boldsymbol\theta^\top\mathbf A\boldsymbol\theta)=(\mathbf A+\mathbf A^\top)\boldsymbol\theta$, $\nabla\|\mathbf X\boldsymbol\theta-\mathbf y\|^2=2\mathbf X^\top(\mathbf X\boldsymbol\theta-\mathbf y)$.",
+   r"Activation derivatives: $\sigma'=\sigma(1-\sigma)$, $(e^z)'=e^z$, $\partial p_k/\partial z_j=p_k(\mathbb 1[k=j]-p_j)$, $\nabla\log\sum e^{z}=\text{softmax}$, ReLU$'=\mathbb 1[a>0]$.",
+   r"Set the gradient to zero for closed forms (MLE, least squares, ridge, MAP); use subgradients at kinks (lasso, hinge); backprop and BPTT are the chain rule repeated."],
+  [r"$\partial J/\partial z=\text{prediction}-\text{truth}$ (Poisson, Bernoulli, Binomial, softmax)",r"$\nabla_{\mathbf W}=\boldsymbol\delta\mathbf x^\top$",r"$\frac{J(\theta+h)-J(\theta-h)}{2h}\approx J'(\theta)$"],
+  [r"Forgetting the inner derivative $\boldsymbol\phi$ (or $\mathbf x$).",r"Sign errors: the loss is the negative log-likelihood; the update subtracts the gradient.",r"Treating a parameter-dependent term as a constant."],
+  r"Murphy §7.8 (matrix calculus), §8.2, §13.3 (backprop); every lecture’s derivation in the Complete Study Notes.", "N1–N13, A2–A11"),
  ("t12","The midterm example and sheet","L19","High",
   "Your professor’s own sample question. Know the loss and both gradients cold.",
   ["Normal with $\\mu=\\boldsymbol\\theta_1^\\top\\boldsymbol\\phi$ and $\\sigma^2=\\exp(\\boldsymbol\\theta_2^\\top\\boldsymbol\\phi)$.",
@@ -169,7 +188,7 @@ TOPICS = [
    r"Soft margin: $\min\tfrac12\|\mathbf w\|^2+C\sum\xi_i$; $\xi_i=\max(0,1-m_i)$ is the hinge loss; the role of $C$; SVM versus logistic regression."],
   [r"$d=\frac2{\|\mathbf w\|}$",r"$y_i(\mathbf x_i^\top\mathbf w-b)\ge1-\xi_i,\ \xi_i\ge0$",r"$\xi_i=\max(0,1-y_i(\mathbf x_i^\top\mathbf w-b))$"],
   [r"The lecture writes $\mathbf x^\top\mathbf w-b$ (minus $b$); the textbooks write $\mathbf w^\top\mathbf x+b$.",r"$\xi_i>1$ means misclassified; $0<\xi_i\le1$ means inside the street but correct.",r"Large $C$ = narrow street (variance); small $C$ = wide street (bias)."],
-  r"Lecture 20; Murphy §17.3 (SVMs), §8.5 (constrained optimization); Bishop §7.1 p.326, §7.1.1 p.331, Appendix E p.707.", r"L1–L11"),
+  r"Lecture 20; Murphy §17.3 (SVMs), §8.5 (constrained optimization); Bishop §7.1 p.326, §7.1.1 p.331, Appendix E p.707.", r"L1–L11, N9"),
 ]
 
 # ---------------- Questions ----------------
@@ -177,12 +196,19 @@ from questions import GROUPS, Q
 BONUS=set()
 
 # ---------------- Mock exam ----------------
+import random as _r, math as _m
+from plots import scatter as _sc
+_g=_r.Random(21); _x=[_g.uniform(0,10) for _ in range(70)]; _y=[2-0.5*v+_g.gauss(0,0.15+0.4*v) for v in _x]
+_MC1=_sc(_x,_y,"input x","label y","Mock figure 1",(0,10),(-14,10))
+_g=_r.Random(22); _x=[_g.uniform(0,8) for _ in range(60)]; _y=[sum(_g.random()<1/(1+_m.exp(-1.1*(v-4))) for _ in range(20)) for v in _x]
+_MC2=_sc(_x,_y,"dose x","patients recovered y","Mock figure 2",(0,8),(-1,21),yticks=[0,5,10,15,20])
+
 MOCK_INTRO = r"""Sit this alone, on paper, with a simple calculator and only a reference sheet like the midterm’s (seven distributions and seven identities). 180 minutes, 120 marks: the same length as the real exam, at about 1.5 minutes per mark. Cover the answers. Then mark yourself with the marking notes; 84 or more (70%) is a strong result."""
 MOCK_MINUTES = 180
 
 MOCK_MC = [
- (r"Which distribution suits ‘minutes until the next bus arrives’ (positive, not bounded)?", ["Poisson","Normal","Weibull","Binomial"], 2, "A positive duration: Weibull (the Poisson is for counts)."),
- (r"$\sigma^2=\exp(\boldsymbol\theta_2^\top\boldsymbol\phi)$ is used because", ["it is faster to compute","it keeps the variance positive","it makes the loss convex","it removes the bias"], 1, "exp maps any real number to a positive one."),
+ (_MC1+r"Which model fits the data in the figure?", [r"Normal with constant variance",r"Normal with $\mu=\boldsymbol\theta_1^\top\boldsymbol\phi$ and $\sigma^2=\exp(\boldsymbol\theta_2^\top\boldsymbol\phi)$","Poisson with $\\lambda=\\exp(\\boldsymbol\\theta^\\top\\boldsymbol\\phi)$","Bernoulli with a sigmoid"], 1, "Real values (negatives too) whose spread grows with $x$: the variance must depend on $x$ (the L19 example)."),
+ (_MC2+r"Each point is the number of 20 patients who recovered at a given dose. Which distribution fits $y|x$?", ["Poisson","Normal","Binomial with $n=20$ and $p=\\sigma(\\cdot)$","Categorical"], 2, "Whole numbers capped at the known 20, following an S-shape: Binomial with a sigmoid."),
  (r"The gradient of the logistic loss for one point is", [r"$(y-\sigma(z))\mathbf x$",r"$(\sigma(z)-y)\mathbf x$",r"$\sigma(z)(1-\sigma(z))\mathbf x$",r"$2(z-y)\mathbf x$"], 1, "(prediction − truth) × input."),
  (r"Gradient descent on a quadratic with largest curvature 20 is stable iff $\alpha<$", ["0.05","0.1","0.2","2"], 1, r"$2/\lambda_{\max}=2/20=0.1$."),
  (r"A Laplace prior on the weights corresponds to", ["ridge","lasso","dropout","early stopping"], 1, r"$-\log$ of a Laplace density is $|\theta|/b$: an $L_1$ penalty."),
@@ -299,6 +325,12 @@ LESSONS = {
 "t10": r"""<p>A <strong>Markov chain</strong> forgets the past given the present: $p(X_{t+1}|X_{0:t})=p(X_{t+1}|X_t)$. With a transition matrix $\mathbf A$ (rows sum to 1) the distribution after $t$ steps is (start)$\,\mathbf A^t$. A DFA such as ‘even number of 1s’ shows the idea: one bit of state is a sufficient summary of the whole history.</p>
 <p>A <strong>language model</strong> is $p(x_0,\dots,x_T)=p(x_0)\prod_tp(x_t|x_{0:t-1})$; the history grows, so we introduce a <strong>hidden state</strong> $h_t$ and <strong>marginalize</strong>: $p(y)=\sum_hp(y|h)p(h)$. <em>Example:</em> prior $(0.6,0.4)$, $p(\text{pass}|h)=(0.2,0.8)$ gives $p(\text{pass})=0.44$. The forward algorithm does the sum over all hidden paths in $TK^2$ steps.</p>
 <p>An <strong>RNN</strong> makes $h_t$ deterministic and learned: $\mathbf h_t=b(\mathbf W_{xh}\mathbf x_t+\mathbf W_{hh}\mathbf h_{t-1})$, same weights every step. Backprop through time multiplies many factors: vanishing ($0.9^{50}=0.005$) or exploding ($1.1^{50}=117$); GRU and LSTM fix it. <strong>Attention</strong> replaces the single summary with a key–value store: weights $\text{softmax}(\mathbf q_t^\top\mathbf k_i/\sqrt d)$, output $\sum_i$ weight$\times\mathbf v_i$. A <strong>Transformer</strong> stacks attention heads (cost grows like $n^2$) and adds positional encodings. An <strong>LLM</strong> is maximum likelihood on next tokens, trained with teacher forcing and used by autoregressive rollout until $\langle\text{eos}\rangle$.</p>""",
+"tgit": r"""<p><strong>Git</strong> keeps the history of a folder: every <strong>commit</strong> is a snapshot with a message, and a <strong>branch</strong> is a separate line of commits. Big projects are built in many small, tracked steps.</p>
+<p><strong>The course setup:</strong> each student has a private GitLab group; the assignment repository has a read-only <code>main</code> branch with the starter code and a <code>solution</code> branch for your work. A typical session: <code>git clone URL</code>, <code>git checkout -b solution</code>, edit, <code>git status</code>, <code>git add file</code>, <code>git commit -m "message"</code>, <code>git push -u origin solution</code>. You may open a merge request to see your changes, but never merge.</p>
+<p><strong>Submitting:</strong> check on GitLab that the <code>solution</code> branch has every file, then submit the <strong>commit hash</strong> (40 hexadecimal characters) of the snapshot to be graded, with the PDF report on Canvas. A hash names exactly one version, so later pushes do not change what is graded.</p>""",
+"tgrad": r"""<p>Almost every gradient in the course has the same shape. Write the score $z_i=\boldsymbol\theta^\top\boldsymbol\phi_i$, differentiate the loss with respect to $z_i$, then multiply by $\boldsymbol\phi_i$: $\nabla_{\boldsymbol\theta}J=\sum_i\frac{\partial J}{\partial z_i}\boldsymbol\phi_i$. For the Poisson, Bernoulli, Binomial and softmax models $\partial J/\partial z$ is <strong>prediction − truth</strong>.</p>
+<p><strong>Matrix rules:</strong> $\nabla(\mathbf a^\top\boldsymbol\theta)=\mathbf a$; $\nabla(\boldsymbol\theta^\top\mathbf A\boldsymbol\theta)=2\mathbf A\boldsymbol\theta$ for symmetric $\mathbf A$. So $\nabla\frac1D\|\mathbf X\boldsymbol\theta-\mathbf y\|^2=\frac2D\mathbf X^\top(\mathbf X\boldsymbol\theta-\mathbf y)$; setting it to 0 gives the normal equations, and adding $\lambda\|\boldsymbol\theta\|^2$ gives ridge $(\mathbf X^\top\mathbf X+\lambda\mathbf I)^{-1}\mathbf X^\top\mathbf y$.</p>
+<p><strong>Closed forms</strong> come from setting derivatives to zero (Gaussian mean and variance, coin MLE and MAP). <strong>Kinks</strong> (lasso’s $|\theta|$, the SVM hinge) use subgradients: the soft threshold and $\partial J/\partial\mathbf w=\mathbf w-C\sum_{\text{viol}}y_i\mathbf x_i$. <strong>Backprop</strong> is the chain rule from the loss backward: $\boldsymbol\delta_1=(\mathbf W_2^\top\boldsymbol\delta_2)\odot g'(\mathbf a)$, $\nabla_{\mathbf W_1}=\boldsymbol\delta_1\mathbf x^\top$; through time it multiplies the recurrent weight again and again. Always sanity-check: the gradient has the shape of the parameter, and a finite difference agrees with it.</p>""",
 "t11": r"""<p>To minimize a differentiable loss: $\boldsymbol\theta\leftarrow\boldsymbol\theta-\alpha\nabla J(\boldsymbol\theta)$. The gradient points uphill, so we step the other way; $\alpha$ is the learning rate. <em>Example</em> $J=(\theta-2)^2$ from $0$, $\alpha=0.25$: $1,\ 1.5,\ 1.75,\dots$ each step halves the distance.</p>
 <p><strong>Learning rate:</strong> too high diverges, high oscillates, low is slow. On a quadratic it is stable iff $\alpha<2/\lambda_{\max}$ (the largest curvature). <strong>Convex</strong> (bowl; chord above the curve): one global minimum. MSE and logistic loss are convex; neural-network losses are not.</p>
 <p><strong>SGD:</strong> use a random mini-batch of size $B$ for each step: cheaper, unbiased, noisy (noise falls as $B$ grows); step sizes need $\sum\alpha_t=\infty$, $\sum\alpha_t^2<\infty$. <strong>Momentum</strong> $\mathbf m_t=\beta\mathbf m_{t-1}+\mathbf g_t$ smooths the zig-zag. Adam, RMSprop, Adagrad give each weight its own step. Autodiff (PyTorch): forward pass stores values, backward pass multiplies local derivatives.</p>""",

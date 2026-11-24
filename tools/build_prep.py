@@ -77,5 +77,6 @@ rendered=json.load(open(P+'maths_prep_out.json'))
 page=re.sub(r'MATHPH(\d+)X',lambda m:rendered[int(m.group(1))],page)
 assert '$' not in re.sub(r'<style.*?</style>|<script.*?</script>','',page,flags=re.S).replace('\\$',''), 'stray $'
 page=page.replace('<a href="#plan">Plan</a>','<a href="index.html">Home</a><a href="#plan">Plan</a>',1)
+page=page.replace('<h4>Formulas to know</h4><div class="fm"></div>','')
 open(T+'../docs/'+OUT,'w').write(page)
 print('bytes',len(page),'questions',len(Q))

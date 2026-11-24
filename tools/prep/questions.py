@@ -11,6 +11,7 @@ def S(*steps, tip=None):
 # (code, title, intro, topic card id)
 GROUPS = [
  ("A", "The recipe: derive a loss and its gradient", "The heart of the course. Pick a distribution, parameterize it, write the log-likelihood, negate, differentiate. Do every one on paper first.", "t3"),
+ ("P", "Read the graph: which distribution?", "The exam may show a plot instead of words. Read the axes, the trend and the spread, then pick the distribution, the activation and the loss.", "t2"),
  ("B", "Gaussians, clustering and sampling (Assignment 1)", "Fit Gaussians by maximum likelihood, evaluate densities, assign points, sample with Cholesky, read the score.", "t4"),
  ("C", "Tensors and NumPy", "Shapes, axes, broadcasting, masks, views and copies.", "t1"),
  ("D", "Probability and maximum likelihood", "Bayes, expectation and variance, independence, and MLE by hand.", "t2"),
@@ -22,6 +23,8 @@ GROUPS = [
  ("J", "Gradient descent", "Steps by hand, stability, SGD, momentum, autodiff.", "t11"),
  ("K", "Sequence models (Lectures 16–17)", "Markov chains, hidden states, marginalization, RNNs, attention, LLMs.", "t10"),
  ("L", "SVMs and constrained optimization (Lecture 20)", "Margin, constraints, support vectors, Lagrangians, slack and the hinge loss.", "t13"),
+ ("M", "Git and GitLab (Lecture 05)", "Commits, branches, the solution branch, submitting a commit hash.", "tgit"),
+ ("N", "Gradient derivations", "Every derivation you could be asked for, from first principles: matrix calculus, MLE, sigmoid and softmax, ridge and lasso, backprop, the SVM hinge, BPTT.", "tgrad"),
 ]
 
 Q = []
@@ -793,3 +796,366 @@ q("L11","L",2,r"""Why can the hard-margin problem have no solution, and how do s
 S(r"If the classes overlap, no $(\mathbf w,b)$ satisfies all $y_i(\mathbf x_i^\top\mathbf w-b)\ge1$: the feasible set is empty.",
   r"Slack relaxes each constraint to $\ge1-\xi_i$ with $\xi_i\ge0$; large enough $\xi_i$ always works, and $C\sum\xi_i$ keeps them small.",
   r"$\xi_i=0$: outside the street; $0<\xi_i\le1$: inside but correct; $\xi_i>1$: misclassified."))
+
+# =====================================================================
+# Gap-filling questions (full-syllabus audit)
+# =====================================================================
+q("C10","C",1,r"""(a) What is the <code>dtype</code> of <code>np.array([1,2,3])</code>, of <code>np.array([1,2,3.0])</code>, and of <code>h &gt;= 5</code>? (b) For <code>X</code> of shape $(10,3)$, what do <code>X[2]</code>, <code>X[:,1]</code>, <code>X[:5,1:]</code> and <code>X[-1]</code> give, with shapes?""",
+S(r"(a) Whole numbers → <code>int64</code>; one decimal makes the whole array <code>float64</code>; a comparison gives <code>bool</code>.",
+  r"(b) <code>X[2]</code>: row 3, shape $(3,)$.",
+  r"<code>X[:,1]</code>: column 2 for every row, shape $(10,)$.",
+  r"<code>X[:5,1:]</code>: first 5 rows, columns 2–3, shape $(5,2)$.",
+  r"<code>X[-1]</code>: the last row, shape $(3,)$. Slices are views (C9).",
+  tip="A wrong dtype gives silent bugs, such as integer division or a mask made of decimals."))
+
+q("D11","D",1,r"""(a) State the three conditions for a collection $\Sigma$ of subsets of $\Omega$ to be a σ-algebra. (b) State the rules of a probability measure. (c) For a fair die, compute $p(\text{even})$ and say which rule you used.""",
+S(r"(a) $\Omega\in\Sigma$; if $A\in\Sigma$ then its complement $\Omega\setminus A\in\Sigma$; countable unions of sets in $\Sigma$ are in $\Sigma$.",
+  r"(b) $p:\Sigma\to[0,1]$, $p(\emptyset)=0$, $p(\Omega)=1$, and probabilities of non-overlapping events add.",
+  r"(c) $\{2\},\{4\},\{6\}$ do not overlap, so $p(\text{even})=\tfrac16+\tfrac16+\tfrac16=0.5$ (additivity).",
+  r"A random variable is a function from $\Omega$ to numbers, e.g. heads → 1, tails → 0."))
+
+q("D12","D",2,r"""(a) What happens to the likelihood curve of a coin’s $\theta$ as the data grow from 10 to 1000 flips, and why do we average the log-likelihood? (b) The MLE is fitted on $\mathcal D$. Is it the best parameter for new data? What must hold for it to carry over?""",
+S(r"(a) The peak gets narrower: more data means a more certain estimate.",
+  r"The raw likelihood values shrink toward 0 (underflow), so we use the log-likelihood, averaged over $D$, which keeps a clear peak.",
+  r"(b) Not necessarily: the MLE is best for the data it saw, which is why we test on independent data.",
+  r"It carries over only if training and test data come from the same process (IID). A different test distribution is out-of-distribution generalization, where it may fail."))
+
+q("E11","E",1,r"""$\mathbf M=\begin{bmatrix}1&-1\\1&0\end{bmatrix}$. Where do the basis vectors $(1,0)$ and $(0,1)$ go? Compute $\mathbf M(2,1)$ using the columns.""",
+S(r"$\mathbf M(1,0)$ is the first column $(1,1)$; $\mathbf M(0,1)$ is the second column $(-1,0)$.",
+  r"By linearity $\mathbf M(2,1)=2(1,1)+1(-1,0)=(1,2)$.",
+  r"A matrix is a change of basis: its columns are where the basic arrows land. $\mathbf X\boldsymbol\theta$ likewise mixes the columns of $\mathbf X$."))
+
+q("F11","F",2,r"""Describe honest evaluation of a classifier in three steps. Why are scores on the training data optimistic? What does the ROC curve show, and what does an AUC of 0.5 mean?""",
+S(r"1. Get a test set sampled independently from the same process. 2. Predict its labels. 3. Score with the log-likelihood and/or accuracy, precision and recall.",
+  r"Training scores are optimistic because the parameters were chosen to fit those exact points.",
+  r"The ROC curve plots recall (true-positive rate) against the false-positive rate as the threshold moves from 1 to 0.",
+  r"The area under it (AUC) is 1 for a perfect ranking and 0.5 for random guessing (the diagonal)."))
+
+q("G11","G",1,r"""A model has 90% accuracy overall. A group making up 10% of the data is classified 0% correctly. What is the accuracy on the other 90%? What should a report include? Give one real example of biased ML from the lecture.""",
+S(r"$0.9=0.9\cdot a+0.1\cdot0$, so the other 90% are classified $a=100\%$ correctly.",
+  r"The average hides a group that is completely failed.",
+  r"Report performance per group, not only on average.",
+  r"Examples from the slides: Amazon’s hiring model, ads showing high-income jobs mostly to men, credit denied by race or gender, less health care offered to Black patients.",
+  tip="A model learns the quirks of the data it was sampled from, including its biases."))
+
+q("G12","G",2,r"""<strong>No Free Lunch.</strong> Three binary inputs $x_1,x_2,x_3$ and four labelled rows. How many Boolean functions exist, and how many fit the four rows perfectly? What is the lesson?""",
+S(r"There are $2^3=8$ possible inputs, so $2^8=256$ Boolean functions.",
+  r"The four rows fix four outputs; the other four inputs are free: $2^4=16$ functions fit the data perfectly.",
+  r"They disagree on unseen inputs, so which one a learner picks depends on its inductive bias.",
+  r"No single algorithm is best on every problem; a method wins when its assumptions match the problem."))
+
+q("G13","G",1,r"""(a) What is a hyperparameter? How does grid search work? (b) What is an inductive bias? Give the inductive bias of linear regression, logistic regression and IID splitting.""",
+S(r"(a) A setting chosen before training (learning rate, polynomial degree, $\lambda$, basis functions). Grid search tries every combination on a grid and keeps the best by validation score.",
+  r"(b) The assumptions a learner makes to generalize beyond the data (Occam’s razor: prefer the simplest explanation).",
+  r"Linear regression: the mean is linear in the features, noise is Gaussian.",
+  r"Logistic regression: a linear decision boundary. IID splitting: train and test come from the same process."))
+
+q("G14","G",2,r"""(a) Why are seeds not enough for reproducibility, and what do we do instead? (b) A paper tunes 30 learning rates for its new method but runs the baseline with one default. What is this called, and what is the fair procedure?""",
+S(r"(a) Exact determinism needs the same code, libraries, OS and often hardware; GPUs and distributed training break it. Seeds are still useful for debugging.",
+  r"Instead, repeat runs, report means with error bars, and draw conclusions by hypothesis testing (‘A tends to significantly beat B’).",
+  r"(b) ‘Deflating a baseline’.",
+  r"Fair: tune both methods over their hyperparameters on validation data, repeat each setting, then compare the best A with the best B. Never tune on the test set."))
+
+q("G15","G",3,r"""Joint distribution: $p(0,0)=0.4$, $p(0,1)=0.1$, $p(1,0)=0.1$, $p(1,1)=0.4$. Compute $H(X)$, $H(Y)$, $H(X,Y)$, the mutual information $I(X,Y)$ and $H(Y|X)$ in bits.""",
+S(r"Marginals are $(0.5,0.5)$ each, so $H(X)=H(Y)=1$ bit.",
+  r"$H(X,Y)=-[2(0.4\log_20.4)+2(0.1\log_20.1)]=1.058+0.664=1.722$ bits.",
+  r"$I(X,Y)=H(X)+H(Y)-H(X,Y)=2-1.722=0.278$ bits: knowing $X$ tells you a little about $Y$.",
+  r"$H(Y|X)=H(X,Y)-H(X)=0.722$ bits (less than $H(Y)=1$, as conditioning never increases entropy).",
+  tip=r"The slide writes $H(X)=\mathbb E[\log X]$; the correct definition is $-\mathbb E[\log p(X)]$."))
+
+q("H10","H",2,r"""Write MAP for linear regression as ‘fit + penalty’ with a prior $p(\boldsymbol\theta)\propto e^{-\lambda\sum|\theta_i|^q}$. What are $q=2$ and $q=1$? Why does the $L_1$ penalty give exact zeros (geometric picture)?""",
+S(r"$\arg\max p(\boldsymbol\theta|\mathcal D)=\arg\max[\log p(\mathcal D|\boldsymbol\theta)+\log p(\boldsymbol\theta)]=\arg\min[\text{MSE}(\boldsymbol\theta)+\lambda\sum_i|\theta_i|^q]$ (up to scaling of $\lambda$).",
+  r"$q=2$: ridge (Gaussian prior). $q=1$: lasso (Laplace prior).",
+  r"Picture the loss contours touching the constraint region $\sum|\theta_i|\le t$: the $L_1$ region is a diamond with corners on the axes, so the first contact is often a corner, where some $\theta_i=0$.",
+  r"The $L_2$ region is a circle with no corners, so weights shrink but rarely hit 0 exactly."))
+
+q("I11","I",2,r"""(a) State the universal approximation theorem informally. (b) Give its three limitations from the lecture, with the grid-count example for $D=1,2,3,10$.""",
+S(r"(a) An MLP with one hidden layer and enough hidden units can approximate any continuous function to any accuracy.",
+  r"(b) 1. The number of units needed can grow exponentially with the input dimension (curse of dimensionality): 10 points per axis gives $10,\,100,\,1000$ and $10^{10}$ grid points for $D=1,2,3,10$.",
+  r"2. The network may need to be very wide.",
+  r"3. It only says the function can be fitted (training error); it does not promise generalization to test data."))
+
+q("I12","I",1,r"""Why is increasing depth often more effective than increasing width? Use the lecture’s two arguments.""",
+S(r"Each ReLU layer folds the input space like paper, so a few layers create exponentially many linear pieces.",
+  r"Depth gives a compositional form: later layers build on earlier features (e.g. layer 1 finds the motifs ‘AA’ and ‘CG’, layer 2 combines them), a useful inductive bias.",
+  r"Deep ReLU networks of bounded width are also universal approximators."))
+
+q("J11","J",2,r"""(a) Is $f(x,y)=x^3y^5$ convex? Check the Hessian at $(1,1)$. (b) What do Adagrad, RMSprop and Adam add to SGD, and what is Adam’s update made of?""",
+S(r"(a) At $(1,1)$: $f_{xx}=6xy^5=6$, $f_{yy}=20x^3y^3=20$, $f_{xy}=15x^2y^4=15$.",
+  r"$\det=6\cdot20-15^2=-105<0$: the Hessian is indefinite, so $f$ is not convex.",
+  r"(b) Each keeps running statistics of the gradients so every parameter gets its own step size.",
+  r"Adam combines momentum $\mathbf m_t=\beta_1\mathbf m_{t-1}+(1-\beta_1)\mathbf g_t$ with a scale $\mathbf s_t=\beta_2\mathbf s_{t-1}+(1-\beta_2)\mathbf g_t^2$ and steps by $\mathbf m_t/\sqrt{\mathbf s_t}$ (with bias correction). AdamW decouples weight decay."))
+
+q("K14","K",1,r"""(a) What are <code>&lt;bos&gt;</code> and <code>&lt;eos&gt;</code>, and why use sentence-piece (sub-word) tokens? (b) Compare BERT and GPT/Llama: training task and architecture.""",
+S(r"(a) Beginning- and end-of-sequence tokens: generation starts from <code>&lt;bos&gt;</code> and stops when <code>&lt;eos&gt;</code> is produced.",
+  r"Sub-word fragments let a fixed dictionary spell any word, so rare words are never out of vocabulary.",
+  r"(b) BERT: bidirectional encoder trained to fill in masked tokens (‘[MASK]’) and score the loss at those positions.",
+  r"GPT and Llama: decoder-only, causally masked, trained to predict the next token; Llama is open (up to 405B parameters, 128k-token vocabulary in Llama 3)."))
+
+# =====================================================================
+# M. Git (Lecture 05)
+# =====================================================================
+q("M1","M",1,r"""Give the lecture’s three reasons for version control, and define commit, branch, clone, push and <code>origin</code>.""",
+S(r"Software (especially ML) is hard; complex projects are built in many small steps; those steps are tracked with a version-control system such as Git.",
+  r"<strong>Commit</strong>: a saved snapshot with a message. <strong>Branch</strong>: a separate line of commits.",
+  r"<strong>Clone</strong>: copy the remote repository to your computer. <strong>Push</strong>: upload your commits.",
+  r"<strong>origin</strong>: the nickname of the remote (GitLab) copy."))
+
+q("M2","M",1,r"""In the course repositories, who can write to <code>main</code> and to <code>solution</code>? May you merge your merge request?""",
+S(r"<code>main</code>: the instructor reads and writes; students can only read (starter code).",
+  r"<code>solution</code>: both write; all your work goes here.",
+  r"You may open a merge request to see your changes against <code>main</code>, but do not merge it: leave the solution in the <code>solution</code> branch."))
+
+q("M3","M",1,r"""Put a work session in order and say what each command does: <code>git push -u origin solution</code>, <code>git clone URL</code>, <code>git commit -m &quot;…&quot;</code>, <code>git checkout -b solution</code>, <code>git add a1.py</code>, <code>git status</code>.""",
+S(r"<code>git clone URL</code>: copy the repository.",
+  r"<code>git checkout -b solution</code>: create and switch to the solution branch.",
+  r"(edit files) <code>git status</code>: see what changed.",
+  r"<code>git add a1.py</code>: stage the file for the next snapshot.",
+  r"<code>git commit -m &quot;…&quot;</code>: save the snapshot.",
+  r"<code>git push -u origin solution</code>: upload the branch so GitLab and the grader see it."))
+
+q("M4","M",1,r"""How do you submit an assignment, and why a commit hash rather than ‘the latest version’? Which commands print hashes?""",
+S(r"Check on the GitLab website that you are on the <code>solution</code> branch and that all files are there.",
+  r"Copy the hash of the intended commit and submit it (with the PDF report on Canvas).",
+  r"A hash (40 hexadecimal characters) names exactly one snapshot, so later pushes do not change what is graded.",
+  r"<code>git log --oneline -3</code> (short hashes) and <code>git rev-parse HEAD</code> (full hash)."))
+
+q("M5","M",2,r"""You committed on <code>main</code> by mistake and the push is rejected. Explain why, and how to move the work to <code>solution</code>.""",
+S(r"Students only have read access to <code>main</code>, so the push is refused.",
+  r"Create the branch from where you are: <code>git checkout -b solution</code> (it contains your commit).",
+  r"Push it: <code>git push -u origin solution</code>.",
+  r"Optionally reset your local <code>main</code> to the remote (<code>git checkout main; git reset --hard origin/main</code>) so it matches the starter code again."))
+
+q("M6","M",1,r"""What is the difference between <code>git commit -m</code> and <code>git commit -am</code>? Why commit in small steps?""",
+S(r"<code>-m</code> commits only what was staged with <code>git add</code>.",
+  r"<code>-am</code> first stages all modified tracked files (not new files), then commits.",
+  r"Small commits with clear messages make it easy to find and undo the step that broke something, and show your progress."))
+
+# =====================================================================
+# N. Gradient derivations
+# =====================================================================
+q("N1","N",2,r"""Derive $\nabla_{\boldsymbol\theta}\frac1D\|\mathbf X\boldsymbol\theta-\mathbf y\|^2$ in matrix form and show that setting it to zero gives the normal equations.""",
+S(r"Expand: $\|\mathbf X\boldsymbol\theta-\mathbf y\|^2=\boldsymbol\theta^\top\mathbf X^\top\mathbf X\boldsymbol\theta-2\mathbf y^\top\mathbf X\boldsymbol\theta+\mathbf y^\top\mathbf y$.",
+  r"Rules: $\nabla(\mathbf a^\top\boldsymbol\theta)=\mathbf a$ and $\nabla(\boldsymbol\theta^\top\mathbf A\boldsymbol\theta)=2\mathbf A\boldsymbol\theta$ for symmetric $\mathbf A$.",
+  r"So $\nabla=\frac1D[2\mathbf X^\top\mathbf X\boldsymbol\theta-2\mathbf X^\top\mathbf y]=\frac2D\mathbf X^\top(\mathbf X\boldsymbol\theta-\mathbf y)$.",
+  r"Set to $\mathbf 0$: $\mathbf X^\top\mathbf X\boldsymbol\theta=\mathbf X^\top\mathbf y$, so $\hat{\boldsymbol\theta}=(\mathbf X^\top\mathbf X)^{-1}\mathbf X^\top\mathbf y$."))
+
+q("N2","N",2,r"""Derive the maximum-likelihood mean and variance of a Normal from $x_1,\dots,x_n$ by setting derivatives to zero. Check on $2,4,6$.""",
+S(r"Log-likelihood: $\ell=-\frac n2\log(2\pi\sigma^2)-\frac1{2\sigma^2}\sum_i(x_i-\mu)^2$.",
+  r"$\partial\ell/\partial\mu=\frac1{\sigma^2}\sum_i(x_i-\mu)=0\Rightarrow\hat\mu=\frac1n\sum x_i$.",
+  r"Write $v=\sigma^2$: $\partial\ell/\partial v=-\frac n{2v}+\frac1{2v^2}\sum_i(x_i-\mu)^2=0\Rightarrow\hat v=\frac1n\sum_i(x_i-\hat\mu)^2$.",
+  r"Check: $\hat\mu=4$, $\hat\sigma^2=8/3=2.667$ (B1)."))
+
+q("N3","N",1,r"""Derive $\sigma'(z)=\sigma(z)(1-\sigma(z))$ and $\frac{d}{dz}\log\sigma(z)=1-\sigma(z)$.""",
+S(r"$\sigma=(1+e^{-z})^{-1}$, so $\sigma'=(1+e^{-z})^{-2}e^{-z}$.",
+  r"Split: $\frac1{1+e^{-z}}\cdot\frac{e^{-z}}{1+e^{-z}}=\sigma\cdot(1-\sigma)$, since $\frac{e^{-z}}{1+e^{-z}}=1-\sigma$.",
+  r"Then $\frac d{dz}\log\sigma=\sigma'/\sigma=1-\sigma$, and $\frac d{dz}\log(1-\sigma)=-\sigma'/(1-\sigma)=-\sigma$."))
+
+q("N4","N",2,r"""Derive the logistic-regression gradient for one point by the chain rule $\frac{\partial L}{\partial p}\cdot\frac{\partial p}{\partial z}\cdot\frac{\partial z}{\partial\boldsymbol\theta}$.""",
+S(r"$L=-[y\log p+(1-y)\log(1-p)]$, so $\partial L/\partial p=-\frac yp+\frac{1-y}{1-p}=\frac{p-y}{p(1-p)}$.",
+  r"$\partial p/\partial z=p(1-p)$ (N3).",
+  r"$\partial z/\partial\boldsymbol\theta=\mathbf x$ for $z=\boldsymbol\theta^\top\mathbf x$.",
+  r"Multiply: $\frac{p-y}{p(1-p)}\cdot p(1-p)\cdot\mathbf x=(p-y)\mathbf x$."))
+
+q("N5","N",3,r"""Derive the softmax Jacobian $\partial p_k/\partial z_j$ and from it $\partial(-\log p_y)/\partial z_j$. Evaluate for $\mathbf z=(2,1,0)$, true class 1 (the first).""",
+S(r"$p_k=e^{z_k}/S$, $S=\sum_je^{z_j}$. Quotient rule: $\partial p_k/\partial z_j=p_k(\mathbb 1[k=j]-p_j)$.",
+  r"$-\log p_y=-z_y+\log S$, and $\partial\log S/\partial z_j=e^{z_j}/S=p_j$ (the gradient of log-sum-exp is softmax).",
+  r"So $\partial(-\log p_y)/\partial z_j=p_j-\mathbb 1[j=y]$.",
+  r"$\mathbf p=(0.665,0.245,0.090)$; gradient $(0.665-1,0.245,0.090)=(-0.335,0.245,0.090)$."))
+
+q("N6","N",2,r"""Derive the ridge closed form from $J=\|\mathbf y-\mathbf X\boldsymbol\theta\|^2+\lambda\|\boldsymbol\theta\|^2$. Why is it always solvable for $\lambda>0$?""",
+S(r"$\nabla J=-2\mathbf X^\top(\mathbf y-\mathbf X\boldsymbol\theta)+2\lambda\boldsymbol\theta$.",
+  r"Set to $\mathbf 0$: $(\mathbf X^\top\mathbf X+\lambda\mathbf I)\boldsymbol\theta=\mathbf X^\top\mathbf y$.",
+  r"$\hat{\boldsymbol\theta}=(\mathbf X^\top\mathbf X+\lambda\mathbf I)^{-1}\mathbf X^\top\mathbf y$.",
+  r"$\mathbf X^\top\mathbf X$ has eigenvalues $\ge0$; adding $\lambda$ makes every eigenvalue $\ge\lambda>0$, so the matrix is invertible."))
+
+q("N7","N",3,r"""Derive the lasso soft-threshold: minimize $g(\theta)=\tfrac12(\theta-c)^2+t|\theta|$ over $\theta$.""",
+S(r"For $\theta>0$: $g'=\theta-c+t=0\Rightarrow\theta=c-t$, valid if $c>t$.",
+  r"For $\theta<0$: $g'=\theta-c-t=0\Rightarrow\theta=c+t$, valid if $c<-t$.",
+  r"Otherwise ($|c|\le t$) neither works and the minimum is at the kink $\theta=0$ (the subgradient $[-t,t]$ contains $c$).",
+  r"Together: $\theta^*=\text{sign}(c)\max(|c|-t,0)$. E.g. $c=3,t=1\Rightarrow2$; $c=0.7\Rightarrow0$ (H2)."))
+
+q("N8","N",3,r"""Derive backpropagation for $\mathbf a=\mathbf W_1\mathbf x+\mathbf b_1$, $\mathbf h=g(\mathbf a)$, $\hat y=\mathbf w_2^\top\mathbf h+b_2$, $L=(\hat y-y)^2$. Give every gradient in vector form.""",
+S(r"Output error: $\delta_2=\partial L/\partial\hat y=2(\hat y-y)$.",
+  r"Output layer: $\partial L/\partial\mathbf w_2=\delta_2\mathbf h$, $\partial L/\partial b_2=\delta_2$.",
+  r"Back into the hidden layer: $\partial L/\partial\mathbf h=\delta_2\mathbf w_2$, then $\boldsymbol\delta_1=\partial L/\partial\mathbf a=\delta_2\mathbf w_2\odot g'(\mathbf a)$ (ReLU: $g'=1$ if $a>0$, else 0).",
+  r"First layer: $\partial L/\partial\mathbf W_1=\boldsymbol\delta_1\mathbf x^\top$ (an outer product), $\partial L/\partial\mathbf b_1=\boldsymbol\delta_1$.",
+  r"Check with mock long answer 3: $\delta_2=2$, $\boldsymbol\delta_1=(2,6)$, $\partial L/\partial\mathbf W_1=\begin{bmatrix}4&2\\12&6\end{bmatrix}$."))
+
+q("N9","N",3,r"""Soft-margin SVM $J=\tfrac12w^2+C\sum_i\max(0,1-y_i(x_iw-b))$ in 1-D. Derive the (sub)gradients. Evaluate at $w=1$, $b=3$, $C=1$ for the points of L4 and take one step with $\alpha=0.1$.""",
+S(r"A point with $m_i=y_i(x_iw-b)\ge1$ contributes 0. A violator ($m_i<1$) contributes $1-y_ix_iw+y_ib$.",
+  r"So $\partial J/\partial w=w-C\sum_{\text{viol}}y_ix_i$ and $\partial J/\partial b=C\sum_{\text{viol}}y_i$.",
+  r"Violators (L4): $(2.5,-1)$, $(3.5,+1)$, $(2,+1)$. $\sum y_ix_i=-2.5+3.5+2=3$; $\sum y_i=1$.",
+  r"$\partial J/\partial w=1-3=-2$; $\partial J/\partial b=1$.",
+  r"Step: $w=1-0.1(-2)=1.2$, $b=3-0.1(1)=2.9$.",
+  tip=r"The hinge is not differentiable at $m=1$; any value in between is a valid subgradient there."))
+
+q("N10","N",2,r"""Derive the MAP estimate of a coin with $H$ heads in $D$ flips and a Beta$(\alpha,\beta)$ prior.""",
+S(r"Posterior $\propto\theta^H(1-\theta)^{D-H}\cdot\theta^{\alpha-1}(1-\theta)^{\beta-1}$.",
+  r"Log: $(H+\alpha-1)\log\theta+(D-H+\beta-1)\log(1-\theta)$.",
+  r"Derivative: $\frac{H+\alpha-1}\theta-\frac{D-H+\beta-1}{1-\theta}=0$.",
+  r"Solve: $\theta_{\text{MAP}}=\frac{H+\alpha-1}{D+\alpha+\beta-2}$. With $\alpha=\beta=1$ it is the MLE $H/D$."))
+
+q("N11","N",3,r"""Backprop through time. $h_t=wh_{t-1}+x_t$, loss $L=h_2$. Derive $dL/dw$ and evaluate for $h_0=1$, $x_1=1$, $x_2=0$, $w=0.5$.""",
+S(r"Forward: $h_1=0.5\cdot1+1=1.5$, $h_2=0.5\cdot1.5+0=0.75$.",
+  r"Unroll: $h_2$ depends on $w$ directly and through $h_1$: $\frac{dh_2}{dw}=h_1+w\frac{dh_1}{dw}$, with $\frac{dh_1}{dw}=h_0$.",
+  r"$dL/dw=1.5+0.5\cdot1=2.0$.",
+  r"Check: $h_2=w^2h_0+wx_1+x_2=w^2+w$, derivative $2w+1=2$ ✓. Longer chains multiply $w$ again and again: vanishing or exploding gradients."))
+
+q("N12","N",2,r"""Use matrix-calculus rules to minimize $J(\boldsymbol\theta)=\boldsymbol\theta^\top\mathbf A\boldsymbol\theta-2\mathbf b^\top\boldsymbol\theta$ with $\mathbf A=\text{diag}(2,4)$, $\mathbf b=(2,4)$.""",
+S(r"$\nabla(\boldsymbol\theta^\top\mathbf A\boldsymbol\theta)=(\mathbf A+\mathbf A^\top)\boldsymbol\theta=2\mathbf A\boldsymbol\theta$ (symmetric); $\nabla(\mathbf b^\top\boldsymbol\theta)=\mathbf b$.",
+  r"$\nabla J=2\mathbf A\boldsymbol\theta-2\mathbf b=\mathbf 0\Rightarrow\mathbf A\boldsymbol\theta=\mathbf b$.",
+  r"$\boldsymbol\theta=(2/2,\ 4/4)=(1,1)$; a minimum because $\mathbf A$ is positive definite."))
+
+q("N13","N",1,r"""Check a derived gradient numerically: for $J=(\theta-2)^2$ at $\theta=0$, compute the central difference with $h=0.01$ and compare with $J'(0)$.""",
+S(r"$J(0.01)=1.99^2=3.9601$, $J(-0.01)=2.01^2=4.0401$.",
+  r"$\frac{J(h)-J(-h)}{2h}=\frac{3.9601-4.0401}{0.02}=-4$.",
+  r"$J'(\theta)=2(\theta-2)=-4$ ✓. Use this check whenever you code a gradient (e.g. in an assignment)."))
+
+# =====================================================================
+# P. Read the graph: which distribution?
+# =====================================================================
+import random, math
+from plots import scatter, scatter_classes, histogram, bars
+
+def _rng(seed): return random.Random(seed)
+def _sig(z): return 1/(1+math.exp(-z))
+def _poisson(r, lam):
+    L_, k, p = math.exp(-lam), 0, 1.0
+    while True:
+        p *= r.random()
+        if p <= L_: return k
+        k += 1
+def _binom(r, n, p): return sum(r.random() < p for _ in range(n))
+
+READ = r"Read the axes first: what values can the vertical quantity take (any real, whole, 0/1, bounded, positive, a fraction)?"
+
+# P1 constant spread
+r=_rng(1); xs=[r.uniform(0,10) for _ in range(60)]; ys=[2+1.5*x+r.gauss(0,1.5) for x in xs]
+q("P1","P",1, scatter(xs,ys,"hours studied x","score y","Figure P1",(0,10),(-2,22)) +
+r"""<p>The figure shows a label $y$ against a feature $x$. Name the distribution of $y|x$, say how its parameter(s) depend on $x$, and write the loss.</p>""",
+S(READ+r" Here $y$ takes any real value (decimals, no visible floor or cap).",
+  r"Trend: the cloud follows a straight line upward, so the mean is linear in $x$: $\mu=\theta_0+\theta_1x=\boldsymbol\theta^\top\boldsymbol\phi(x)$ with $\boldsymbol\phi=(1,x)$.",
+  r"Spread: the vertical scatter around the line is about the same everywhere, so the variance is constant.",
+  r"Distribution: Normal, $y|x\sim\mathcal N(\boldsymbol\theta^\top\boldsymbol\phi(x),\sigma^2)$, identity activation.",
+  r"Loss: $J=\tfrac12\sum_i(y_i-\boldsymbol\theta^\top\boldsymbol\phi_i)^2$ (least squares; the $\log\sigma^2$ term is a constant and is dropped).",
+  tip="Constant spread → fixed variance → plain least squares. Compare with P2."))
+
+# P2 funnel
+r=_rng(2); xs=[r.uniform(0,10) for _ in range(80)]; ys=[1+0.8*x+r.gauss(0,0.2+0.35*x) for x in xs]
+q("P2","P",2, scatter(xs,ys,"input x","label y","Figure P2",(0,10),(-6,18)) +
+r"""<p>Name the distribution of $y|x$ and write how every parameter depends on $x$. Write the loss and say which term must not be dropped.</p>""",
+S(READ+r" $y$ is real-valued and can be negative.",
+  r"Trend: the centre of the cloud rises along a line, so $\mu=\boldsymbol\theta_1^\top\boldsymbol\phi(x)$.",
+  r"Spread: the cloud fans out as $x$ grows (narrow at the left, wide at the right), so the variance must depend on $x$ too.",
+  r"Distribution: Normal with both parameters learned: $\mu=\boldsymbol\theta_1^\top\boldsymbol\phi$, $\sigma^2=\exp(\boldsymbol\theta_2^\top\boldsymbol\phi)$ (exp keeps it positive).",
+  r"Loss: $J=\sum_i\big[\tfrac12\boldsymbol\theta_2^\top\boldsymbol\phi_i+\frac{(y_i-\boldsymbol\theta_1^\top\boldsymbol\phi_i)^2}{2\exp(\boldsymbol\theta_2^\top\boldsymbol\phi_i)}\big]$; the $\tfrac12\boldsymbol\theta_2^\top\boldsymbol\phi$ term must stay.",
+  tip="A widening ‘funnel’ is the midterm example (L19). Say the word ‘heteroscedastic’ if you like, but the key is: variance depends on x."))
+
+# P3 binary
+r=_rng(3); xs=[r.uniform(0,10) for _ in range(70)]; ys=[1 if r.random()<_sig(1.2*(x-5)) else 0 for x in xs]
+q("P3","P",1, scatter(xs,ys,"hours studied x","outcome y","Figure P3",(0,10),(-0.15,1.15),yticks=[0,1]) +
+r"""<p>Name the distribution of $y|x$ and the activation. Roughly where is the decision boundary, and what does that say about $\theta_0$ and $\theta_1$ in $z=\theta_0+\theta_1x$?</p>""",
+S(READ+r" Every point sits at exactly $0$ or $1$: two outcomes.",
+  r"Distribution: Bernoulli with $p=P(y{=}1|x)$; $p$ must stay in $[0,1]$, so $p=\sigma(\theta_0+\theta_1x)$ (logistic regression).",
+  r"Pattern: for small $x$ almost all points are 0, for large $x$ almost all are 1, with a mixed zone around $x\approx5$.",
+  r"The boundary is where $p=0.5$, i.e. $z=0$: $\theta_0+5\theta_1\approx0$, so $\theta_0\approx-5\theta_1$ with $\theta_1>0$ (1s become more likely as $x$ grows).",
+  r"Loss: binary cross-entropy $-\sum_i[y_i\log p_i+(1-y_i)\log(1-p_i)]$.",
+  tip="A narrow mixed zone means a large |θ₁| (steep sigmoid); a wide one means a small |θ₁|."))
+
+# P4 Poisson
+r=_rng(4); xs=[r.uniform(0,4) for _ in range(80)]; ys=[_poisson(r,math.exp(0.2+0.6*x)) for x in xs]
+q("P4","P",2, scatter(xs,ys,"advertising spend x","customers per day y","Figure P4",(0,4),(-1,max(ys)+2)) +
+r"""<p>Name the distribution of $y|x$, choose the activation, and justify both from what you see. Write the loss.</p>""",
+S(READ+r" The points sit on whole-number rows (0, 1, 2, …), never below 0, with no visible maximum: counts.",
+  r"Trend: the average count grows faster than a straight line (curving up), which matches $\lambda=\exp(\theta_0+\theta_1x)$.",
+  r"Spread: the scatter grows as the mean grows; for a Poisson the variance equals the mean, so this fits.",
+  r"Reject: Normal (decimals and negatives allowed, constant spread), Bernoulli (only 0/1), Binomial (needs a known maximum).",
+  r"Distribution: Poisson with $\lambda=\exp(\boldsymbol\theta^\top\boldsymbol\phi)$. Loss $J=\sum_i[e^{z_i}-y_iz_i]$ ($\log y_i!$ dropped).",
+  tip="Whole numbers + no cap + spread grows with the mean → Poisson with exp."))
+
+# P5 Binomial
+r=_rng(5); xs=[r.uniform(0,10) for _ in range(70)]; ys=[_binom(r,10,_sig(0.9*(x-5))) for x in xs]
+q("P5","P",2, scatter(xs,ys,"water per pot x","seeds germinated (of 10 planted) y","Figure P5",(0,10),(-0.5,10.5),yticks=[0,2,4,6,8,10]) +
+r"""<p>Ten seeds are planted in every pot. Name the distribution of $y|x$, its parameters and activation. From the plot, estimate where $p=0.5$.</p>""",
+S(READ+r" Whole numbers from 0 to 10, never above 10 (the number planted): a count with a known maximum.",
+  r"The points pile up at 0 on the left and at 10 on the right; the middle follows an S-shape.",
+  r"Distribution: Binomial with $n=10$ known and $p=\sigma(\theta_0+\theta_1x)$ (sigmoid keeps $p\in[0,1]$; the mean $np$ then follows the S).",
+  r"$p=0.5$ where the mean count is $5$: around $x\approx5$, so $\theta_0+5\theta_1\approx0$.",
+  r"Loss: $J=-\sum_i[k_i\log p_i+(10-k_i)\log(1-p_i)]$ (the $\log\binom{10}{k_i}$ term dropped).",
+  tip="Poisson would allow 11, 12, … seeds; the hard cap at n is the giveaway for Binomial."))
+
+# P6 Weibull
+r=_rng(6); vals=[r.weibullvariate(4,1.5) for _ in range(300)]
+q("P6","P",2, histogram(vals,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],"days until the part fails","Figure P6",xticks=[0,2,4,6,8,10,12,14]) +
+r"""<p>The histogram shows failure times of 300 machine parts. Which distribution on the reference sheet fits, and why not the Normal or the Poisson? If each part has features $\boldsymbol\phi(x)$, how would you parameterize it?</p>""",
+S(READ+r" Durations: positive real numbers, never below 0.",
+  r"Shape: one peak near the left and a long tail to the right (right-skewed).",
+  r"Normal: symmetric and gives probability to negative times, so it does not fit the skew or the floor at 0.",
+  r"Poisson: for whole-number counts, not continuous times.",
+  r"Weibull: for positive durations with a skewed shape. Use a known (or learned) shape $k$ and scale $\lambda=\exp(\boldsymbol\theta^\top\boldsymbol\phi)$ (A4)."))
+
+# P7 Beta
+r=_rng(7); vals=[r.betavariate(5,2) for _ in range(250)]
+q("P7","P",2, histogram(vals,[k/10 for k in range(11)],"fraction of questions answered correctly","Figure P7",xticks=[0,0.2,0.4,0.6,0.8,1]) +
+r"""<p>Each student’s value is a fraction between 0 and 1. Which distribution on the reference sheet models such a quantity? Why not the Normal or the Bernoulli?</p>""",
+S(READ+r" Values are real numbers strictly between 0 and 1 (a proportion).",
+  r"Shape: piled toward the high end and cut off at 1, so it is skewed and bounded on both sides.",
+  r"Normal: unbounded, would put probability below 0 and above 1.",
+  r"Bernoulli: only the two values 0 and 1, not fractions in between.",
+  r"Beta$(\alpha,\beta)$: support $(0,1)$; here the mass is near 0.7–0.9, so $\alpha>\beta$ (the mean is $\frac{\alpha}{\alpha+\beta}$).",
+  tip="The Beta is also the prior for a coin’s probability in MAP (L13)."))
+
+# P8 three classes
+r=_rng(8); pts=[];lab=[]
+for c,(mx,my) in enumerate([(2,2),(6,2.5),(4,6.5)]):
+    for _ in range(25): pts.append((r.gauss(mx,0.8),r.gauss(my,0.8))); lab.append(c)
+q("P8","P",1, scatter_classes(pts,lab,"feature x1","feature x2","Figure P8",(-1,9),(-1,10),["class A","class B","class C"]) +
+r"""<p>Each point is labelled with one of three classes. Name the distribution of the label given $(x_1,x_2)$, the activation, and the loss. What do the decision boundaries look like for this model?</p>""",
+S(READ+r" The label is one of three unordered classes (shown by colour and marker), not a number.",
+  r"Distribution: Categorical over 3 classes, $p(y=k|\mathbf x)=\text{softmax}(\mathbf z)_k$ with $z_k=\boldsymbol\theta_k^\top\boldsymbol\phi(\mathbf x)$, $\boldsymbol\phi=(1,x_1,x_2)$.",
+  r"Loss: categorical cross-entropy $-\sum_i\log p_{y_i}$.",
+  r"Boundaries: where two scores tie, $z_j=z_k$, which is a straight line in $(x_1,x_2)$; the three groups here are separable by such lines.",
+  tip="Two classes would be Bernoulli + sigmoid; three or more is Categorical + softmax."))
+
+# P9 bimodal
+r=_rng(9); vals=[r.gauss(2,0.6) if r.random()<0.5 else r.gauss(6,0.8) for _ in range(300)]
+q("P9","P",2, histogram(vals,[k*0.5 for k in range(-1,19)],"measured value","Figure P9",xticks=[0,2,4,6,8]) +
+r"""<p>A data set of 300 real numbers has this histogram. Is a single Normal a good model? What would you use instead, and how is it fitted (Assignment 1)?</p>""",
+S(READ+r" Real values.",
+  r"Shape: two separate peaks (around 2 and 6) with a dip between: bimodal.",
+  r"A single Normal has one peak; its MLE would put the mean near 4, exactly where there is almost no data.",
+  r"Use a mixture of two Gaussians: assign points to the nearer mean and fit a Gaussian (mean, variance by MLE) to each group, as in the GMM assignment.",
+  r"Check with held-out data that two components really beat one (B5)."))
+
+# P10 quadratic
+r=_rng(10); xs=[r.uniform(0,10) for _ in range(60)]; ys=[1+0.3*(x-5)**2+r.gauss(0,0.8) for x in xs]
+q("P10","P",2, scatter(xs,ys,"temperature x","energy use y","Figure P10",(0,10),(-1,11)) +
+r"""<p>Name the distribution of $y|x$ and choose features $\boldsymbol\phi(x)$ so that a model linear in $\boldsymbol\theta$ can fit this. Is it still ‘linear regression’?</p>""",
+S(READ+r" Real values, spread about the same everywhere.",
+  r"Trend: a U-shaped curve with its bottom near $x=5$: not a straight line.",
+  r"Distribution: Normal with constant variance, mean $\boldsymbol\theta^\top\boldsymbol\phi(x)$.",
+  r"Features: $\boldsymbol\phi(x)=(1,x,x^2)$; the model $\theta_0+\theta_1x+\theta_2x^2$ is a parabola but still linear in $\boldsymbol\theta$, so least squares and the normal equations apply.",
+  r"Expect $\theta_2>0$ (opens upward). Too high a degree would overfit (G5)."))
+
+# P11 SVM
+r=_rng(11); pts=[];lab=[]
+for _ in range(14): pts.append((r.uniform(0.3,3.2),r.uniform(0.3,3.0))); lab.append(0)
+for _ in range(14): pts.append((r.uniform(4.6,7.6),r.uniform(3.3,6.6))); lab.append(1)
+pts += [(3.6,2.4),(4.3,3.4)]; lab += [0,1]
+q("P11","P",2, scatter_classes(pts,lab,"feature x1","feature x2","Figure P11",(0,8),(0,7),["y = −1","y = +1"],legend="br") +
+r"""<p>The two classes are separated by a clear gap. Describe the hard-margin SVM for this data: the labels, which points matter, and where the boundary goes. What would change if one $+1$ point appeared deep inside the $-1$ group?</p>""",
+S(r"Labels are $-1$ (circles) and $+1$ (squares); the rule is $\text{sign}(\mathbf x^\top\mathbf w-b)$.",
+  r"The SVM picks the line with the widest empty street between the groups; only the points closest to the gap (here the circle near $(3.6,2.4)$ and the square near $(4.3,3.4)$, plus any others on the curbs) are support vectors.",
+  r"The boundary runs through the middle of the gap, perpendicular to $\mathbf w$; the street width is $2/\|\mathbf w\|$.",
+  r"Points far from the gap do not affect the line at all (hinge loss 0).",
+  r"A $+1$ point inside the $-1$ group makes the data non-separable: the hard-margin problem has no solution, so use slack $\xi_i$ with penalty $C$ (soft margin)."))
+
+# P12 bar chart of counts
+q("P12","P",2, bars(["0","1","2","3","4","5","6"],[14,27,27,18,9,4,1],"emails received in one hour","Figure P12",ylabel="number of hours") +
+r"""<p>Over 100 hours an office counted the emails received each hour; the bars show how many hours had each count. Name a distribution, estimate its parameter from the bars, and check the fit using a property of that distribution.</p>""",
+S(READ+r" Counts 0, 1, 2, … per hour, no fixed maximum.",
+  r"Distribution: Poisson$(\lambda)$; the MLE is the sample mean (D6).",
+  r"Read the bars: 14, 27, 27, 18, 9, 4, 1 hours (sum 100). Mean $=\frac{0\cdot14+1\cdot27+2\cdot27+3\cdot18+4\cdot9+5\cdot4+6\cdot1}{100}=\frac{197}{100}=1.97$.",
+  r"Check: a Poisson has variance = mean. $\mathbb E[k^2]=\frac{27+108+162+144+100+36}{100}=5.77$, variance $=5.77-1.97^2=1.89\approx1.97$ ✓.",
+  r"So $\hat\lambda\approx2$ emails per hour; the right-skewed bars also match the Poisson shape for a small $\lambda$."))

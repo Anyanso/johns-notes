@@ -74,6 +74,9 @@ section.blk>h2{font-size:clamp(1.5rem,4.2vw,2.1rem);font-weight:800;margin-botto
 .tpl{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
 .tpl ol{margin:0;padding-left:1.2em;display:grid;gap:8px}
 .upd{background:var(--warn-soft);color:var(--fg);border:1px solid var(--warn);border-radius:10px;padding:10px 14px;margin:8px 0 0}
+.plot{margin:6px 0 10px;max-width:560px}
+.plot svg{width:100%;height:auto;display:block;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.plot figcaption{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-top:3px}
 .steps{margin:6px 0 4px;padding-left:1.5em}
 .steps li{margin:5px 0;padding-left:2px}
 .steps li::marker{color:var(--accent);font-family:var(--f-mono);font-weight:600}
@@ -174,7 +177,7 @@ footer{margin-top:40px;color:var(--muted);font-size:.88rem;border-top:1px solid 
 <section class="hero">
 <div class="eyebrow">Final exam · Wednesday 9 December · 9:00 AM – 12:00 PM · WPT 130–132</div>
 <h1>The whole course, one method.</h1>
-<p class="lead">Every topic from Lectures 02–20, each with a short lesson, a must-know list and around ten practice questions with numbered, step-by-step solutions (123 in all), plus a full-length mock exam and an “Am I ready?” check at the end. Work through it, mark each question, and the page tells you when you are ready.</p>
+<p class="lead">Every topic from Lectures 02–20, including Git (L05) and a dedicated gradient-derivations section, each with a short lesson, a must-know list and practice questions with numbered, step-by-step solutions (169 in all, including twelve where you read the distribution off a graph), plus a full-length mock exam and an “Am I ready?” check at the end. Work through it, mark each question, and the page tells you when you are ready.</p>
 <ul class="facts">
 <li><small>Time left</small><strong id="cd">–</strong></li>
 <li><small>Format</small><strong>3 hours, on paper, individual</strong></li>
@@ -183,7 +186,7 @@ footer{margin-top:40px;color:var(--muted);font-size:.88rem;border-top:1px solid 
 </ul>
 </section>
 
-<div class="upd"><strong>What we know (Nov 24).</strong> The final is on <u>Wednesday, December 9, at 9:00 AM in WPT 130–132</u>, and it is <u>3 hours long</u> (9:00–12:00). From the syllabus: in person, on paper, <u>individual</u>, worth 40%, multiple choice or long answer, and only a simple calculator is allowed. The exact scope and whether a reference sheet is given are <u>not announced yet</u>. This guide assumes the final is cumulative (Lectures 02–20, plus any later lectures) and that a sheet like the midterm’s is provided. The midterm’s limits (no sequence models, no gradient derivations) applied to the midterm only, so both are included here.</div>
+<div class="upd"><strong>What we know (Nov 24).</strong> The final is on <u>Wednesday, December 9, at 9:00 AM in WPT 130–132</u>, and it is <u>3 hours long</u> (9:00–12:00). From the syllabus: in person, on paper, <u>individual</u>, worth 40%, multiple choice or long answer, and only a simple calculator is allowed. The exact scope and whether a reference sheet is given are <u>not announced yet</u>. This guide treats <u>everything as examinable</u>: every lecture from 02 to 20 (and any later ones), every subsection, and every gradient derivation. It assumes a sheet like the midterm’s is provided. The midterm’s limits (no sequence models, no gradient derivations) applied to the midterm only.</div>
 <section class="blk" id="evidence"><h2>What the exam will look like</h2>
 <p class="sub">A reading of the evidence you have, not a leak of the paper. Be ready for each of these.</p>
 <div class="ev">
@@ -265,7 +268,7 @@ $$J(\boldsymbol\theta)=-\sum_{i=1}^{D}\Big[k_i\log p_i+(10-k_i)\log(1-p_i)\Big],
 <div class="teams"><!--MEMORIZE--></div></section>
 
 <section class="blk" id="topics"><h2>Topic by topic</h2>
-<p class="sub">Thirteen cards in lecture order. The priority tag is my estimate from the assignments and the sample, not the professor’s statement. Each card starts with a short lesson: read it, check the must-know list, then do its drill questions.</p>
+<p class="sub">Fifteen cards in lecture order, plus a gradients card that cuts across all of them. The priority tag is my estimate from the assignments and the sample, not the professor’s statement. Each card starts with a short lesson: read it, check the must-know list, then do its drill questions.</p>
 <div class="tools"><button type="button" id="openall">Open all</button><button type="button" id="closeall">Close all</button></div>
 <!--TOPICS--></section>
 
@@ -297,6 +300,8 @@ $$J(\boldsymbol\theta)=-\sum_{i=1}^{D}\Big[k_i\log p_i+(10-k_i)\log(1-p_i)\Big],
 <li><label><input type="checkbox" data-k="ready-d3"><span>I can derive least squares from a Normal likelihood, and the learned-variance loss without dropping the $\tfrac12\log\sigma^2$ term (A8, A3).</span></label></li>
 <li><label><input type="checkbox" data-k="ready-d4"><span>I can do the recipe for a distribution I have not practised, such as the Binomial or Weibull, from the sheet (A4, A5, A11).</span></label></li>
 <li><label><input type="checkbox" data-k="ready-d5"><span>I can derive ridge and lasso from Gaussian and Laplace priors (H4, H9).</span></label></li>
+<li><label><input type="checkbox" data-k="ready-d8"><span>Given only a plot, I can name the distribution, its parameterization and activation, and the loss, and say why the others fail (group P).</span></label></li>
+<li><label><input type="checkbox" data-k="ready-d7"><span>I can do every derivation in group N without notes: matrix-calculus gradients, Gaussian MLE, sigmoid and softmax derivatives, ridge, the soft threshold, backprop in vector form, the hinge subgradient, Beta MAP and BPTT.</span></label></li>
 <li><label><input type="checkbox" data-k="ready-d6"><span>I can write the hard- and soft-margin SVM, derive the margin $2/\|\mathbf w\|$, and solve a small Lagrangian (L3, L8).</span></label></li>
 </ul>
 <h3 style="margin:14px 0 4px;font-size:1.15rem">Calculations by hand</h3>
@@ -320,6 +325,7 @@ $$J(\boldsymbol\theta)=-\sum_{i=1}^{D}\Big[k_i\log p_i+(10-k_i)\log(1-p_i)\Big],
 </ul>
 <h3 style="margin:14px 0 4px;font-size:1.15rem">Final checks</h3>
 <ul class="rchk">
+<li><label><input type="checkbox" data-k="ready-f4"><span>I can explain the Git workflow for the assignments (branches, commit, push, submitting a hash).</span></label></li>
 <li><label><input type="checkbox" data-k="ready-f1"><span>I redid every midterm question I lost marks on.</span></label></li>
 <li><label><input type="checkbox" data-k="ready-f2"><span>I read the common mistakes in every topic card and the costly mistakes under the recipe.</span></label></li>
 <li><label><input type="checkbox" data-k="ready-f3"><span>I know the exam is Wed Dec 9, 9:00 AM – 12:00 PM (3 hours) in WPT 130–132, I know where that room is, and I have a pencil, eraser, simple calculator and student ID ready.</span></label></li>
