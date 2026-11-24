@@ -2,9 +2,13 @@
 import re, json, subprocess, html, sys
 import os
 T=os.path.dirname(os.path.abspath(__file__))+'/'
-sys.path.insert(0,T+'prep')
+PREP=sys.argv[1] if len(sys.argv)>1 else 'prep'          # source folder under tools/
+OUT=sys.argv[2] if len(sys.argv)>2 else 'prep.html'      # output file in docs/
+sys.path.insert(0,T+PREP)
 from content import *
-B=T; P=T+'prep/'
+BONUS=globals().get('BONUS',{'A2','A3','A4','A5'})
+BONUS_NOTE=globals().get('BONUS_NOTE','Gradient part is bonus: you will not be asked to derive gradients.')
+B=T; P=T+PREP+'/'
 maths=[]
 def stash(s):
     def d(m): maths.append((m.group(1).strip(),True)); return 'MATHPH%dX'%(len(maths)-1)
@@ -36,16 +40,18 @@ for n,(i,t,lec,L,why,must,fm,traps,read,drill) in enumerate(TOPICS,1):
         i,n,t,lec,lik[L],L+' priority',M(why),M(LESSONS[i]),li(must),''.join('<div>%s</div>'%M('$'+f+'$') if not f.startswith('$') else '<div>%s</div>'%M(f) for f in fm),li(traps),M(read),drill)
 
 # ---- practice
-nav=''.join('<a href="#g-%s">%s</a>'%(c,c) for c,_,_ in GROUPS)
+nav=''.join('<a href="#g-%s">%s</a>'%(g[0],g[0]) for g in GROUPS)
 prac=''
 dif={1:'warm-up',2:'exam level',3:'stretch'}
-for c,title,intro in GROUPS:
-    prac+='<section class="grp" id="g-%s"><h3><span class="gc">%s</span>%s</h3><p class="gi">%s</p>'%(c,c,title,intro)
+tnames={t[0]:t[1] for t in TOPICS}
+for c,title,intro,*rest in GROUPS:
+    card=('<span class="gtop">topic card: <a href="#%s">%s</a></span>'%(rest[0],tnames.get(rest[0],rest[0])) if rest else '')
+    prac+='<section class="grp" id="g-%s" data-t="%s"><h3><span class="gc">%s</span>%s%s</h3><p class="gi">%s</p>'%(c,html.escape(re.sub(r'\$[^$]*\$','',title)),c,M(title),card,M(intro))
     for (i,g,d,stem,ans) in Q:
         if g!=c: continue
         prac+='''<article class="q" data-id="%s" id="q-%s"><div class="qh"><span class="qid">%s</span><span class="lvl l%d">%s</span><span class="st"></span></div>
 %s<div class="stem">%s</div><details><summary>Show the worked answer</summary><div class="ans">%s</div>
-<div class="mk"><button type="button" data-v="ok">Got it</button><button type="button" data-v="miss">Review again</button></div></details></article>'''%(i,i,i,d,dif[d],('<p class="bonus">Gradient part is bonus: you will not be asked to derive gradients.</p>' if i in ('A2','A3','A4','A5') else ''),M(stem),M(ans))
+<div class="mk"><button type="button" data-v="ok">Got it</button><button type="button" data-v="miss">Review again</button></div></details></article>'''%(i,i,i,d,dif[d],('<p class="bonus">%s</p>'%BONUS_NOTE if i in BONUS else ''),M(stem),M(ans))
     prac+='</section>'
 
 # ---- mock
@@ -71,5 +77,5 @@ rendered=json.load(open(P+'maths_prep_out.json'))
 page=re.sub(r'MATHPH(\d+)X',lambda m:rendered[int(m.group(1))],page)
 assert '$' not in re.sub(r'<style.*?</style>|<script.*?</script>','',page,flags=re.S).replace('\\$',''), 'stray $'
 page=page.replace('<a href="#plan">Plan</a>','<a href="index.html">Home</a><a href="#plan">Plan</a>',1)
-open(T+'../docs/prep.html','w').write(page)
+open(T+'../docs/'+OUT,'w').write(page)
 print('bytes',len(page),'questions',len(Q))

@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>CMPT 423 Midterm Prep</title>
+<title>CMPT 423 Final Exam Prep</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -74,6 +74,25 @@ section.blk>h2{font-size:clamp(1.5rem,4.2vw,2.1rem);font-weight:800;margin-botto
 .tpl{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
 .tpl ol{margin:0;padding-left:1.2em;display:grid;gap:8px}
 .upd{background:var(--warn-soft);color:var(--fg);border:1px solid var(--warn);border-radius:10px;padding:10px 14px;margin:8px 0 0}
+.steps{margin:6px 0 4px;padding-left:1.5em}
+.steps li{margin:5px 0;padding-left:2px}
+.steps li::marker{color:var(--accent);font-family:var(--f-mono);font-weight:600}
+.tip{background:var(--accent-soft,rgba(0,0,0,.04));border-left:3px solid var(--accent);border-radius:6px;padding:6px 10px;margin:8px 0 2px}
+.gtop{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-left:auto}
+.gtop a{color:var(--muted)}
+.rd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;margin:10px 0}
+.rd{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px;min-width:0}
+.rd a{color:var(--fg);text-decoration:none;font-weight:600}
+.rd .rbar{height:7px;border-radius:4px;background:var(--line);overflow:hidden;margin:6px 0 3px}
+.rd .rbar i{display:block;height:100%;background:var(--accent);width:0}
+.rd.done{border-color:var(--ok)}.rd.done .rbar i{background:var(--ok)}
+.rd small{font-family:var(--f-mono);color:var(--muted)}
+.verdict{font-size:1.15rem;font-weight:600;padding:12px 14px;border-radius:12px;border:2px solid var(--line);margin:12px 0;background:var(--surface)}
+.verdict.go{border-color:var(--ok)}
+.rchk{list-style:none;padding:0;margin:6px 0}
+.rchk li{margin:6px 0}
+.rchk label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.rchk input{margin-top:5px;flex:none}
 .bonus{font-family:var(--f-mono);font-size:12px;color:var(--warn);background:var(--warn-soft);border-radius:6px;padding:3px 8px;margin:8px 0 0;display:inline-block}
 .worked{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:6px 16px 8px;margin-top:12px}
 .worked ol{padding-left:1.3em}
@@ -150,32 +169,32 @@ footer{margin-top:40px;color:var(--muted);font-size:.88rem;border-top:1px solid 
 <!--KATEX-->
 </style>
 <div class="wrap">
-<header class="bar"><span class="nm">CMPT 423 Midterm Prep</span><nav aria-label="Sections"><a href="#plan">Plan</a><a href="#recipe">Recipe</a><a href="#walkthrough">Walkthrough</a><a href="#memorize">Memorize</a><a href="#topics">Topics</a><a href="#practice">Practice</a><a href="#mock">Mock exam</a></nav><span class="prog" id="prog" aria-live="polite"></span></header>
+<header class="bar"><span class="nm">CMPT 423 Final Exam Prep</span><nav aria-label="Sections"><a href="#plan">Plan</a><a href="#recipe">Recipe</a><a href="#walkthrough">Walkthrough</a><a href="#memorize">Memorize</a><a href="#topics">Topics</a><a href="#practice">Practice</a><a href="#mock">Mock exam</a><a href="#ready">Am I ready?</a></nav><span class="prog" id="prog" aria-live="polite"></span></header>
 
 <section class="hero">
-<div class="eyebrow">Midterm · Monday 16 November · 11:30 · ENG 2B53</div>
-<h1>Two days, one method.</h1>
-<p class="lead">Your professor says the assignments are the closest replica of the midterm. This guide teaches the one method behind both, walks the topics in the lectures and textbooks, and gives you 43 practice questions plus a timed mock exam with worked answers.</p>
+<div class="eyebrow">Final exam · date and room to be announced · individual · 40%</div>
+<h1>The whole course, one method.</h1>
+<p class="lead">Every topic from Lectures 02–20, each with a short lesson, a must-know list and around ten practice questions with numbered, step-by-step solutions (123 in all), plus a full-length mock exam and an “Am I ready?” check at the end. Work through it, mark each question, and the page tells you when you are ready.</p>
 <ul class="facts">
 <li><small>Time left</small><strong id="cd">–</strong></li>
-<li><small>Format</small><strong>On paper, team of two</strong></li>
-<li><small>Allowed</small><strong>Simple calculator + reference sheet</strong></li>
-<li><small>Counts for</small><strong>10% of the course</strong></li>
+<li><small>Format</small><strong>On paper, individual</strong></li>
+<li><small>Allowed</small><strong>Simple calculator</strong></li>
+<li><small>Counts for</small><strong>40% of the course</strong></li>
 </ul>
 </section>
 
-<div class="upd"><strong>Update from your professor (Nov 12).</strong> Sequence models (Lectures 16–17) are <u>not</u> on the midterm. You will <u>not</u> be asked to derive gradients as in Assignment 2. A sheet with the equations and distributions is provided. The guide below has been trimmed to match.</div>
+<div class="upd"><strong>What we know (Nov 24).</strong> From the syllabus: the final is in person, on paper, <u>individual</u>, worth 40%, multiple choice or long answer, and only a simple calculator is allowed. The date, room, exact scope and whether a reference sheet is given are <u>not announced yet</u>. This guide assumes the final is cumulative (Lectures 02–20, plus any later lectures) and that a sheet like the midterm’s is provided. The midterm’s limits (no sequence models, no gradient derivations) applied to the midterm only, so both are included here. Update this when your professor announces details.</div>
 <section class="blk" id="evidence"><h2>What the exam will look like</h2>
-<p class="sub">This is a reading of the evidence you have, not a leak of the paper. The tasks below are the ones to be ready for.</p>
+<p class="sub">A reading of the evidence you have, not a leak of the paper. Be ready for each of these.</p>
 <div class="ev">
-<div><span class="tag">Assignment 2</span><h4>Count regression</h4><p>Pick a distribution for a count label, write $p(y|x;\theta)$ with an exp activation, derive the loss, then code and fit it. Steps 1–4 are pure exam material.</p></div>
-<div><span class="tag">Assignment 1</span><h4>Gaussians and GMM</h4><p>Gaussian maximum likelihood (mean, covariance), assigning points to the nearest mean, Cholesky sampling, the score, and why more clusters overfit.</p></div>
-<div><span class="tag">Midterm example</span><h4>Mean and variance from $x$</h4><p>Normal with $\mu=\theta_1^\top\phi$ and $\sigma^2=\exp(\theta_2^\top\phi)$. The sheet gives seven distributions and seven log and probability identities.</p></div>
-<div><span class="tag">Everything else</span><h4>Concept and short calculation</h4><p>Regularization as a prior, bias and variance, shapes in NumPy, neural-network counting, gradient descent behaviour. Multiple choice or long answer.</p></div>
+<div><span class="tag">Assignments 1–3</span><h4>The closest replicas</h4><p>Gaussian MLE and sampling (A1), count regression with the full recipe (A2), and whatever A3 covers. Assignment steps are exam material.</p></div>
+<div><span class="tag">Midterm + L19</span><h4>The recipe on a new problem</h4><p>Choose a distribution, parameterize it, write the loss; this time expect the gradients too. Redo your own midterm until it is perfect.</p></div>
+<div><span class="tag">New material</span><h4>Sequences and SVMs</h4><p>Markov chains, hidden states, RNNs, attention and LLMs (L16–17); margins, constraints, Lagrangians and slack (L20).</p></div>
+<div><span class="tag">Everything else</span><h4>Concept and short calculation</h4><p>Regularization as a prior, bias and variance, metrics, cross-validation and error bars, NumPy shapes, neural-network counting and backprop, gradient descent.</p></div>
 </div></section>
 
-<section class="blk" id="plan"><h2>Your two-day plan</h2>
-<p class="sub">Tick items as you go; the boxes remember your progress on this device. Split Saturday’s mock between you and your partner as one team.</p>
+<section class="blk" id="plan"><h2>Your study plan</h2>
+<p class="sub">Tick items as you go; the boxes remember your progress on this device. When the exam date is announced, fit the last three phases into the days before it.</p>
 <div class="days"><!--PLAN--></div></section>
 
 <section class="blk" id="recipe"><h2>The answer template</h2>
@@ -183,7 +202,7 @@ footer{margin-top:40px;color:var(--muted);font-size:.88rem;border-top:1px solid 
 <div class="tpl"><ol><!--STEPS--></ol></div>
 <h3 style="margin:18px 0 0;font-size:1.15rem">Worked example: counts, as in Assignment 2</h3>
 <div class="worked"><!--WORKED--></div>
-<div class="teams" style="margin-top:12px"><h4 style="margin:10px 0 4px;font-size:1rem">Eight mistakes that cost marks</h4><!--MISTAKES--></div>
+<div class="teams" style="margin-top:12px"><h4 style="margin:10px 0 4px;font-size:1rem">Ten mistakes that cost marks</h4><!--MISTAKES--></div>
 </section>
 
 <section class="blk walk" id="walkthrough"><h2>Guided walkthrough: the seed problem</h2>
@@ -246,34 +265,77 @@ $$J(\boldsymbol\theta)=-\sum_{i=1}^{D}\Big[k_i\log p_i+(10-k_i)\log(1-p_i)\Big],
 <div class="teams"><!--MEMORIZE--></div></section>
 
 <section class="blk" id="topics"><h2>Topic by topic</h2>
-<p class="sub">Eleven cards in lecture order. The priority tag is my estimate from the assignments and the sample, not the professor’s statement. Each card starts with a short lesson: read it, check the must-know list, then do its drill questions.</p>
+<p class="sub">Thirteen cards in lecture order. The priority tag is my estimate from the assignments and the sample, not the professor’s statement. Each card starts with a short lesson: read it, check the must-know list, then do its drill questions.</p>
 <div class="tools"><button type="button" id="openall">Open all</button><button type="button" id="closeall">Close all</button></div>
 <!--TOPICS--></section>
 
 <section class="blk" id="practice"><h2>Practice questions</h2>
-<p class="sub">Try each on paper before opening the answer. Then mark it Got it or Review again; the counter at the top follows you. Jump to a group:</p>
+<p class="sub">Try each on paper before opening the answer; every answer is a numbered, step-by-step solution. Then mark it Got it or Review again. The counter at the top and the readiness panel at the bottom follow you. Jump to a group:</p>
 <div class="pnav"><!--PNAV--></div>
 <!--PRACTICE-->
 <p style="margin-top:12px"><button type="button" class="pl" id="reset">Clear my marks and ticks</button></p></section>
 
 <section class="blk" id="mock"><h2>Mock exam</h2>
 <p class="sub"><!--MOCKINTRO--></p>
-<div class="clock"><span id="clk">50:00</span><button type="button" class="pl" id="go">Start</button><button type="button" class="pl" id="rs">Reset</button></div>
-<h3 style="margin:6px 0 8px;font-size:1.2rem">Part 1: multiple choice (10 marks)</h3>
+<div class="clock"><span id="clk">150:00</span><button type="button" class="pl" id="go">Start</button><button type="button" class="pl" id="rs">Reset</button></div>
+<h3 style="margin:6px 0 8px;font-size:1.2rem">Part 1: multiple choice (15 marks)</h3>
 <div id="mcs"><!--MC--></div><p class="score" id="mcscore"></p>
-<h3 style="margin:14px 0 8px;font-size:1.2rem">Part 2: long answer (40 marks)</h3>
+<h3 style="margin:14px 0 8px;font-size:1.2rem">Part 2: long answer (85 marks)</h3>
 <!--LONG-->
-<footer>Made from the CMPT 423 lectures, the two assignments, the midterm example and Murphy (2022) and Bishop (2006). Check anything you doubt against the Complete Study Notes and your own lecture slides. Page numbers are Murphy’s printed pages.</footer>
+<p style="margin-top:12px"><label style="display:flex;gap:10px;align-items:center;cursor:pointer"><input type="checkbox" data-k="ready-mock"> I sat the full mock, timed, and scored 70 or more out of 100 with the marking notes.</label></p>
+</section>
+
+<section class="blk" id="ready"><h2>Am I ready?</h2>
+<p class="sub">This panel fills in as you mark practice questions. You are ready when every group is green (80% or more marked Got it) and every box below is ticked. Each box is something you should be able to do from a blank page, without notes.</p>
+<div class="verdict" id="verdict">–</div>
+<h3 style="margin:14px 0 4px;font-size:1.15rem">Practice by topic</h3>
+<div class="rd-grid" id="rdgrid"></div>
+<h3 style="margin:14px 0 4px;font-size:1.15rem">Derivations from a blank page</h3>
+<ul class="rchk">
+<li><label><input type="checkbox" data-k="ready-d1"><span>I can derive the loss and gradient for a Poisson count model with an exp activation (A2).</span></label></li>
+<li><label><input type="checkbox" data-k="ready-d2"><span>I can derive binary cross-entropy and softmax cross-entropy and their gradients (A7, A9).</span></label></li>
+<li><label><input type="checkbox" data-k="ready-d3"><span>I can derive least squares from a Normal likelihood, and the learned-variance loss without dropping the $\tfrac12\log\sigma^2$ term (A8, A3).</span></label></li>
+<li><label><input type="checkbox" data-k="ready-d4"><span>I can do the recipe for a distribution I have not practised, such as the Binomial or Weibull, from the sheet (A4, A5, A11).</span></label></li>
+<li><label><input type="checkbox" data-k="ready-d5"><span>I can derive ridge and lasso from Gaussian and Laplace priors (H4, H9).</span></label></li>
+<li><label><input type="checkbox" data-k="ready-d6"><span>I can write the hard- and soft-margin SVM, derive the margin $2/\|\mathbf w\|$, and solve a small Lagrangian (L3, L8).</span></label></li>
+</ul>
+<h3 style="margin:14px 0 4px;font-size:1.15rem">Calculations by hand</h3>
+<ul class="rchk">
+<li><label><input type="checkbox" data-k="ready-c1"><span>Sigmoid, softmax, cross-entropy, and precision/recall/F1 from a confusion matrix.</span></label></li>
+<li><label><input type="checkbox" data-k="ready-c2"><span>Bayes’ rule, expectation and variance, and an MLE or MAP estimate for a coin or a Gaussian.</span></label></li>
+<li><label><input type="checkbox" data-k="ready-c3"><span>Least squares and ridge in one dimension, a 2×2 normal-equation solve, and a 2×2 Cholesky factor.</span></label></li>
+<li><label><input type="checkbox" data-k="ready-c4"><span>A forward pass, a parameter count and a backprop step through a small network.</span></label></li>
+<li><label><input type="checkbox" data-k="ready-c5"><span>Gradient-descent steps, the stability limit $2/\lambda_{\max}$, and momentum.</span></label></li>
+<li><label><input type="checkbox" data-k="ready-c6"><span>A Markov-chain step, a marginal over a hidden state, attention weights and perplexity.</span></label></li>
+<li><label><input type="checkbox" data-k="ready-c7"><span>SVM margin, signed distance, constraint checks, slacks and the soft-margin objective.</span></label></li>
+</ul>
+<h3 style="margin:14px 0 4px;font-size:1.15rem">Explain in two sentences</h3>
+<ul class="rchk">
+<li><label><input type="checkbox" data-k="ready-e1"><span>Why the loss is a negative log-likelihood, and why we may drop only constant terms.</span></label></li>
+<li><label><input type="checkbox" data-k="ready-e2"><span>Overfitting versus underfitting, cross-validation, and why the test set is used once.</span></label></li>
+<li><label><input type="checkbox" data-k="ready-e3"><span>How a prior becomes a penalty, and why lasso gives exact zeros.</span></label></li>
+<li><label><input type="checkbox" data-k="ready-e4"><span>Why networks need non-linear activations, why deep sigmoid nets suffer vanishing gradients, and what dropout does.</span></label></li>
+<li><label><input type="checkbox" data-k="ready-e5"><span>The Markov assumption, why a hidden state needs marginalizing, and how attention differs from an RNN state.</span></label></li>
+<li><label><input type="checkbox" data-k="ready-e6"><span>What support vectors are, what slack means, and how $C$ trades bias against variance.</span></label></li>
+</ul>
+<h3 style="margin:14px 0 4px;font-size:1.15rem">Final checks</h3>
+<ul class="rchk">
+<li><label><input type="checkbox" data-k="ready-f1"><span>I redid every midterm question I lost marks on.</span></label></li>
+<li><label><input type="checkbox" data-k="ready-f2"><span>I read the common mistakes in every topic card and the costly mistakes under the recipe.</span></label></li>
+<li><label><input type="checkbox" data-k="ready-f3"><span>I know the exam date, time, room and what I may bring.</span></label></li>
+</ul>
+<footer>Made from the CMPT 423 lectures (02–20), the assignments, the midterm example and Murphy (2022) and Bishop (2006). Check anything you doubt against the Complete Study Notes and your own slides. The <a href="midterm.html">midterm prep page</a> is archived.</footer>
+
 </section>
 </div>
 <script>
 (function(){
 var LS=null;try{LS=window.localStorage;LS.setItem('t','1');LS.removeItem('t')}catch(e){LS=null}
-function get(k){try{return LS?LS.getItem(k):null}catch(e){return null}}
-function put(k,v){try{if(LS){if(v===null)LS.removeItem(k);else LS.setItem(k,v)}}catch(e){}}
+var PFX='final:';function get(k){try{return LS?LS.getItem(PFX+k):null}catch(e){return null}}
+function put(k,v){try{if(LS){if(v===null)LS.removeItem(PFX+k);else LS.setItem(PFX+k,v)}}catch(e){}}
 var qs=[].slice.call(document.querySelectorAll('.q'));
 function prog(){var ok=0,miss=0;qs.forEach(function(q){var s=q.classList.contains('ok')?1:q.classList.contains('miss')?2:0;if(s==1)ok++;if(s==2)miss++});
-  document.getElementById('prog').innerHTML='<b>'+ok+'</b>/'+qs.length+' got it · '+miss+' to review'}
+  document.getElementById('prog').innerHTML='<b>'+ok+'</b>/'+qs.length+' got it · '+miss+' to review';ready()}
 function paint(q,v){q.classList.remove('ok','miss');var st=q.querySelector('.st');st.textContent='';
   [].forEach.call(q.querySelectorAll('.mk button'),function(b){b.classList.toggle('on',b.dataset.v===v)});
   if(v==='ok'){q.classList.add('ok');st.textContent='got it'}if(v==='miss'){q.classList.add('miss');st.textContent='review'}}
@@ -282,6 +344,18 @@ qs.forEach(function(q){var id=q.dataset.id,v=get('q-'+id);if(v)paint(q,v);
     if(get('q-'+id)===nv)nv=null;put('q-'+id,nv);paint(q,nv);prog()})});
 [].forEach.call(document.querySelectorAll('input[data-k]'),function(c){c.checked=get(c.dataset.k)==='1';
   c.addEventListener('change',function(){put(c.dataset.k,c.checked?'1':null)})});
+function ready(){var grid=document.getElementById('rdgrid');if(!grid)return;var G={},order=[];
+  qs.forEach(function(q){var g=q.dataset.id.charAt(0);if(!G[g]){G[g]={n:0,ok:0,miss:0};order.push(g)}G[g].n++;if(q.classList.contains('ok'))G[g].ok++;if(q.classList.contains('miss'))G[g].miss++});
+  var html='',allg=true;order.forEach(function(g){var x=G[g],pct=Math.round(100*x.ok/x.n),done=pct>=80;if(!done)allg=false;
+    var sec=document.getElementById('g-'+g);var name=sec&&sec.dataset.t?sec.dataset.t:g;
+    html+='<div class="rd'+(done?' done':'')+'"><a href="#g-'+g+'">'+g+' · '+name+'</a><div class="rbar"><i style="width:'+pct+'%"></i></div><small>'+x.ok+'/'+x.n+' got it · '+x.miss+' to review'+(done?' · ready':'')+'</small></div>'});
+  grid.innerHTML=html;
+  var boxes=[].slice.call(document.querySelectorAll('input[data-k^="ready-"]')),ticked=boxes.filter(function(b){return b.checked}).length;
+  var v=document.getElementById('verdict');
+  if(allg&&ticked===boxes.length){v.className='verdict go';v.textContent='✅ You are ready. Every topic is at 80% or more and every check is ticked. Sleep well.'}
+  else{v.className='verdict';var gl=order.filter(function(g){return Math.round(100*G[g].ok/G[g].n)<80});
+    v.textContent='Not yet: '+(gl.length?gl.length+' practice group'+(gl.length>1?'s':'')+' below 80% ('+gl.join(', ')+')':'all practice groups done')+' · '+(boxes.length-ticked)+' of '+boxes.length+' checks left.'}}
+[].forEach.call(document.querySelectorAll('input[data-k^="ready-"]'),function(c){c.addEventListener('change',ready)});
 prog();
 document.getElementById('reset').addEventListener('click',function(){
   qs.forEach(function(q){put('q-'+q.dataset.id,null);paint(q,null)});
@@ -289,9 +363,10 @@ document.getElementById('reset').addEventListener('click',function(){
 document.getElementById('openall').addEventListener('click',function(){[].forEach.call(document.querySelectorAll('.topic'),function(d){d.open=true})});
 document.getElementById('closeall').addEventListener('click',function(){[].forEach.call(document.querySelectorAll('.topic'),function(d){d.open=false})});
 // links to a topic's drill open the practice list
-// countdown to 11:30 CST (UTC-6) on 16 Nov 2026
-function cd(){var t=Date.UTC(2026,10,16,17,30)-Date.now(),el=document.getElementById('cd');
-  if(t<=0){el.textContent='Exam time';return}
+// countdown: set EXAM to the start time once it is announced, e.g. Date.UTC(2026,11,10,15,0)
+var EXAM=null;
+function cd(){var el=document.getElementById('cd');if(!EXAM){el.textContent='Date TBA';return}
+  var t=EXAM-Date.now();if(t<=0){el.textContent='Exam time';return}
   var d=Math.floor(t/864e5),h=Math.floor(t%864e5/36e5);el.textContent=d+' d '+h+' h'}
 cd();setInterval(cd,60000);
 // mock multiple choice
@@ -302,10 +377,10 @@ mcs.forEach(function(m){m.addEventListener('click',function(e){var b=e.target.cl
   m.querySelector('.why').hidden=false;
   document.getElementById('mcscore').textContent=sc+' / '+mcs.length+' correct so far ('+done+' answered)'})});
 // timer
-var left=3000,iv=null,clk=document.getElementById('clk'),go=document.getElementById('go');
+var MOCKSEC=9000,left=MOCKSEC,iv=null,clk=document.getElementById('clk'),go=document.getElementById('go');
 function show(){var m=Math.floor(left/60),s=left%60;clk.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;clk.classList.toggle('low',left<=300)}
 go.addEventListener('click',function(){if(iv){clearInterval(iv);iv=null;go.textContent='Resume';return}
   go.textContent='Pause';iv=setInterval(function(){left--;show();if(left<=0){clearInterval(iv);iv=null;go.textContent='Start'}},1000)});
-document.getElementById('rs').addEventListener('click',function(){if(iv){clearInterval(iv);iv=null}left=3000;go.textContent='Start';show()});
+document.getElementById('rs').addEventListener('click',function(){if(iv){clearInterval(iv);iv=null}left=MOCKSEC;go.textContent='Start';show()});
 })();
 </script>

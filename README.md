@@ -1,6 +1,6 @@
 # CMPT 423 Study Hub
 
-A static website for the course: midterm prep, study notes (Lectures 02–20) and a plain-language "Explain it simply" dropdown inside every lecture.
+A static website for the course: final exam prep, study notes (Lectures 02–20) and a plain-language "Explain it simply" dropdown inside every lecture.
 
 Live site (after step 3 below): `https://<your-github-username>.github.io/<repo-name>/`
 
@@ -20,7 +20,9 @@ Edit the source text, rebuild, push.
 |---|---|
 | Lecture notes, glossary, formula sheet, code, errata | `content/study_notes.md` |
 | The plain-language dropdown for each lecture | `content/easy_edition.md` (same lecture headings: `## Lecture 18 — ...`) |
-| Midterm prep (plan, lessons, questions, mock exam) | `tools/prep/content.py` and `tools/prep/page.html` |
+| Final exam prep (plan, lessons, mock exam, readiness check) | `tools/prep/content.py` and `tools/prep/page.html` |
+| Final exam practice questions (step-by-step answers) | `tools/prep/questions.py` |
+| Midterm prep (archived, `docs/midterm.html`) | `tools/prep_midterm/` |
 
 Then:
 
@@ -30,7 +32,7 @@ cd .. && python3 tools/build_all.py
 git add -A && git commit -m "Add lecture 20" && git push
 ```
 
-`build_all.py` needs Python 3 with `markdown` and `pygments` (`pip install markdown pygments`) and Node.js. It regenerates `docs/index.html`, `docs/notes.html` and `docs/prep.html`; GitHub Pages serves the `docs/` folder.
+`build_all.py` needs Python 3 with `markdown` and `pygments` (`pip install markdown pygments`) and Node.js. It regenerates `docs/index.html`, `docs/notes.html`, `docs/prep.html` and `docs/midterm.html`; GitHub Pages serves the `docs/` folder.
 
 ## Adding a new lecture
 
