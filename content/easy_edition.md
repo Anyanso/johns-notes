@@ -2,7 +2,7 @@
 
 **Course:** CMPT 423 Machine Learning · **Instructor:** Lucas Lehnert · **Term:** Fall 2026 · **University of Saskatchewan** · **Language:** Python
 **Textbooks:** Murphy, *Probabilistic Machine Learning: An Introduction* (2022) and Bishop, *Pattern Recognition and Machine Learning* (2006).
-**Covers:** Lectures 02 to 19 (there is no Lecture 01). New lectures are added as they are posted.
+**Covers:** Lectures 02 to 20 (there is no Lecture 01). New lectures are added as they are posted.
 
 ---
 
@@ -3102,6 +3102,180 @@ Murphy §2.7 (exponential family), §12.3 (generalized linear models, canonical 
 
 ---
 
+## Lecture 20 — Support Vector Machines
+
+**The one-line idea.** Imagine two groups of points on a map and you want to draw a road between them. Many roads would work, but the **safest road is the widest one**, with the most empty space on both sides. A **support vector machine (SVM)** finds that widest road. When the two groups overlap, so no clean road exists, it lets a few points stray into the road, but charges a price for each.
+
+**Two small changes of notation in this lecture.** The labels are $-1$ and $+1$ (not 0 and 1). The score of a point is $\mathbf x^\top\mathbf w-b$, with a **minus** sign on $b$.
+
+### 20.1 Dot product and projection: the shadow of a vector
+
+For two arrows $\mathbf a$ and $\mathbf b$ with angle $\theta$ between them:
+$$\mathbf a^\top\mathbf b=\|\mathbf a\|\,\|\mathbf b\|\cos\theta.$$
+Shine a light straight down onto the line of $\mathbf b$: the **shadow** of $\mathbf a$ has length $\|\mathbf a\|\cos\theta$.
+
+* If $\mathbf b$ has length 1, the dot product **is** the shadow.
+* If $\mathbf b$ has length $\beta$, the dot product is the shadow **times $\beta$**. So shadow $=\mathbf a^\top\mathbf b/\|\mathbf b\|$.
+
+*Example.* $\mathbf a=(3,4)$, $\mathbf b=(2,0)$: $\mathbf a^\top\mathbf b=6$, and $\|\mathbf a\|\|\mathbf b\|\cos\theta=5\cdot2\cdot0.6=6$ ✓. The shadow of $\mathbf a$ on the horizontal axis is $6/2=3$ ✓.
+
+### 20.2 Which side of the road is a point on?
+
+The model has an arrow $\mathbf w$ (pointing from the "$-1$" side toward the "$+1$" side) and a number $b$. The score of a point is $\mathbf x^\top\mathbf w-b$.
+
+| score | meaning |
+|---|---|
+| $0$ | the point is exactly on the **decision boundary** (the middle line of the road) |
+| $+1$ | exactly on the **edge** of the road on the $+$ side |
+| $-1$ | exactly on the **edge** of the road on the $-$ side |
+
+Positive scores are on the $+$ side, negative scores on the $-$ side. The real distance from the middle line is the score divided by the length of $\mathbf w$:
+$$\text{distance}=\frac{\mathbf x^\top\mathbf w-b}{\|\mathbf w\|}.$$
+
+*Example.* $\mathbf w=(3,4)$, $b=5$, point $(3,3)$: score $=3\cdot3+4\cdot3-5=16$, $\|\mathbf w\|=5$, so the distance is $16/5=\mathbf{3.2}$ on the $+$ side. (The slide says $\mathbf x^\top\mathbf w$ "quantifies the distance"; it is the distance **up to the scaling by $\|\mathbf w\|$** and the shift by $b$.)
+
+The point of the middle line closest to the origin is at distance $b/\|\mathbf w\|$ from the origin.
+
+### 20.3 How wide is the road? $d=2/\|\mathbf w\|$
+
+Take one point on each edge: $\mathbf x_i$ on the $-1$ edge, $\mathbf x_j$ on the $+1$ edge. Their scores differ by 2: $\mathbf x_j^\top\mathbf w-\mathbf x_i^\top\mathbf w=(b+1)-(b-1)=2$. The width of the road is the shadow of $\mathbf x_j-\mathbf x_i$ along $\mathbf w$ (only the part of the step that crosses the road counts):
+$$d=\frac{(\mathbf x_j-\mathbf x_i)^\top\mathbf w}{\|\mathbf w\|}=\frac{2}{\|\mathbf w\|}.$$
+**A short arrow $\mathbf w$ gives a wide road.** So the widest road comes from the smallest $\|\mathbf w\|$.
+
+*Example.* $\mathbf w=(1,1)$, $b=4$, $\mathbf x_i=(1,2)$ (score $3-4=-1$), $\mathbf x_j=(2,3)$ (score $5-4=+1$). The road width is $2/\sqrt2=1.414$, and also $(1,1)\cdot(1,1)/\sqrt2=1.414$ ✓.
+
+### 20.4 One rule for both groups
+
+We want every point on its correct side and **outside** the road. For class $+1$ that means score $\ge1$. For class $-1$ it means score $\le-1$. Multiplying by the label $y_i$ turns both into one rule:
+$$y_i\big(\mathbf x_i^\top\mathbf w-b\big)\ge1.$$
+(For $y_i=-1$ the multiplication flips $\le-1$ into $\ge1$.) Read the left side as "how far on the correct side, in road-edge units". A value of 1 means exactly on the edge, between 0 and 1 means correct but **inside** the road, and negative means **wrong side**.
+
+### 20.5 The SVM: the widest road as an optimization problem
+
+$$\min_{\mathbf w,b}\ \tfrac12\|\mathbf w\|^2\quad\text{such that}\quad y_i(\mathbf x_i^\top\mathbf w-b)\ge1\ \text{ for every }i.$$
+In words: **make $\mathbf w$ as short as possible** (widest road) **while keeping every point correct and outside the road**. This is a **constrained** problem: we cannot just roll downhill (Lecture 18), because the answer must satisfy the rules. The points that end up **exactly on the edges** are the **support vectors**. They hold the road in place; every other point could move around (without entering the road) and nothing would change.
+
+**Our ten students (one feature, hours studied).** Passed: 4, 6, 7, 8 hours. Failed: 1, 2, 2, 3, 3, 5 hours. The student who failed with 5 hours sits among the passers, so **all ten cannot be separated by one cut-off**. Remove that student and the rest can: failed are 3 or less, passed are 4 or more. The widest road runs between 3 and 4: middle at $h=3.5$, width 1. Width $2/w=1$ gives $w=2$, and $2\cdot3.5-b=0$ gives $b=7$. Check the edges: $h=4$ (passed): $4\cdot2-7=1$ ✓; $h=3$ (failed): $-(3\cdot2-7)=1$ ✓. The support vectors are the students with 3 and 4 hours.
+
+### 20.6 Solving with a Lagrangian
+
+**The trick.** To minimize $f(\boldsymbol\theta)$ while obeying a rule $c(\boldsymbol\theta)=0$, add a new knob $\lambda$ and build
+$$\mathcal L(\boldsymbol\theta,\lambda)=f(\boldsymbol\theta)+\lambda\,c(\boldsymbol\theta).$$
+Then set **all** the slopes to zero: the slopes with respect to $\boldsymbol\theta$ give $\nabla f+\lambda\nabla c=\mathbf0$, and the slope with respect to $\lambda$ gives back the rule, $c(\boldsymbol\theta)=0$. (The slide's picture of the gradient is just all of these slopes stacked in one column; the last entry is the slope with respect to $\lambda$.)
+
+*Example.* Minimize $x_1^2+x_2^2$ with $x_1+x_2=1$. $\mathcal L=x_1^2+x_2^2+\lambda(x_1+x_2-1)$. Slopes: $2x_1+\lambda=0$, $2x_2+\lambda=0$, $x_1+x_2=1$. So $x_1=x_2=\frac12$ and $\lambda=-1$. The closest point of the line to the origin ✓.
+
+**⚠️ One caveat.** The slide writes the rule as $c\ge0$ (an "at least" rule), but then solves $c=0$. That is right when the rule must hold with equality. For an "at least" rule the textbook form is $\mathcal L=f-\lambda c$ with $\lambda\ge0$, and a rule that is not tight gets $\lambda=0$ (the **KKT conditions**). That is why, in the SVM, only the support vectors matter.
+
+*Two-point SVM.* Failed student at $h=3$ ($y=-1$) and passed at $h=4$ ($y=+1$). Rules: $4w-b\ge1$ and $b-3w\ge1$. The solution has both tight: add them to get $w=2$, then $b=7$. The multipliers are $\lambda_1=\lambda_2=2\ge0$.
+
+### 20.7 When no road exists: slack variables
+
+If the groups overlap, the rules $y_i(\mathbf x_i^\top\mathbf w-b)\ge1$ cannot all be true and the problem has no answer. The fix: give each point a **slack** $\xi_i\ge0$, "how far into (or past) the road this point is allowed to go", and charge for it:
+$$\min_{\mathbf w,b,\boldsymbol\xi}\ \tfrac12\|\mathbf w\|^2+C\sum_i\xi_i\quad\text{such that}\quad y_i(\mathbf x_i^\top\mathbf w-b)\ge1-\xi_i,\ \ \xi_i\ge0.$$
+The slack "**softens**" the rules, so **there is always a solution**. $C$ is the price per unit of slack.
+
+| slack | where the point is |
+|---|---|
+| $\xi_i=0$ | correct and outside the road |
+| $0<\xi_i\le1$ | correct, but inside the road |
+| $\xi_i>1$ | on the **wrong** side (misclassified) |
+
+At the best solution, $\xi_i=\max(0,\,1-y_i(\mathbf x_i^\top\mathbf w-b))$. That quantity is called the **hinge loss**. So an SVM is "a loss ($\sum$ hinge) plus a penalty on $\|\mathbf w\|^2$": the same pattern as ridge regression (Lecture 14), where small $C$ means a strong penalty.
+
+* **Small $C$:** slack is cheap, the road is wide, and more points may stray into it.
+* **Large $C$:** slack is expensive, the road is narrow, and the model tries to get every point right (it can overfit). Pick $C$ by validation (Lecture 10).
+
+**All ten students.**
+
+| $C$ | $w$ | $b$ | middle of the road | road width | points inside or past the road (slack) |
+|---|---|---|---|---|---|
+| 0.1 | 0.5 | 2.5 | $h=5.0$ | 4.0 | $h=4$: 1.5, $h=5$: 1.0, $h=6$: 0.5 |
+| 1 | $\frac23$ | 3 | $h=4.5$ | 3.0 | $h=4$: 1.33, $h=5$: 1.33 |
+
+For $C=1$, the passed student with $h=4$ has score $4\cdot\frac23-3=-\frac13$, so $y\cdot\text{score}=-\frac13$ and $\xi=1-(-\frac13)=\frac43$; the failed student with $h=5$ also gets $\frac43$. Both are above 1, so both are **misclassified**. The students with 3 hours (two of them) and 6 hours sit exactly on the edges. The objective is $\frac12\cdot\frac49+1\cdot\frac83=2.889$.
+
+*Why not the narrow road from 20.5?* That road ($w=2$, $b=7$) gets only one student wrong, but that student is 3 score-units on the wrong side, so the slack is 4 and the objective is $2+4=6$, worse than 2.889. The hinge loss charges **in proportion to how far** a point is on the wrong side, not just whether it is wrong.
+
+**Three ways to charge a mistake** ($m=y\cdot\text{score}$):
+
+| $m$ | $-1$ | $0$ | $1$ | $2$ |
+|---|---|---|---|---|
+| hinge $\max(0,1-m)$ | 2 | 1 | 0 | 0 |
+| logistic $\log(1+e^{-m})$ | 1.313 | 0.693 | 0.313 | 0.127 |
+
+Hinge loss is **exactly zero** once a point is safely outside the road, so such points are ignored completely. Logistic regression keeps a small loss for them.
+
+### 20.8 How this fits the rest of the course
+
+* It is the **same recipe** as before: a model, a loss (hinge instead of cross-entropy) and a penalty on big weights ($\|\mathbf w\|^2$, as in ridge).
+* It gives **no probability**. The score is a distance, not $p(y|\mathbf x)$, so there is no maximum-likelihood derivation here.
+* The new idea is **constraints**: the Lagrangian handles rules that the answer must obey.
+
+### 20.9 Summary
+
+* Road width $d=2/\|\mathbf w\|$; middle line $\mathbf x^\top\mathbf w=b$, edges $\mathbf x^\top\mathbf w=b\pm1$.
+* Every point correct and outside the road: $y_i(\mathbf x_i^\top\mathbf w-b)\ge1$.
+* Hard-margin SVM: minimize $\frac12\|\mathbf w\|^2$ under that rule. Support vectors are the points on the edges.
+* Rules are handled by a Lagrangian: set all slopes, including the one for $\lambda$, to zero.
+* Overlapping data: slack $\xi_i$, minimize $\frac12\|\mathbf w\|^2+C\sum\xi_i$; always solvable; $\xi_i>1$ means misclassified.
+
+#### 🧪 Check yourself
+
+1. If $\|\mathbf w\|=0.5$, how wide is the road? *($2/0.5=4$.)*
+2. A point with $y=-1$ has score $\mathbf x^\top\mathbf w-b=0.5$. What is its slack? *($y\cdot\text{score}=-0.5$, so $\xi=1.5$; misclassified.)*
+3. A point with $y=+1$ has score $0.4$. What is its slack? *($\xi=1-0.4=0.6$: correct but inside the road.)*
+4. Does a bigger $C$ make the road wider or narrower? *(Narrower: slack is more expensive.)*
+
+#### 📖 Go deeper: plain-words intuition (optional)
+
+* **Why only the support vectors matter.** Push a point further away from the road and the road does not care; only the points touching the edges stop it from widening. That makes the SVM depend on very few points.
+* **Why 1 and not some other number on the edges?** Doubling $\mathbf w$ and $b$ does not move the middle line but halves the width. Fixing the edges at $\pm1$ pins down the scale so that "smallest $\|\mathbf w\|$" has a single meaning.
+* **Textbook:** Murphy §17.3 and §8.5; Bishop §7.1 (p.326), §7.1.1 (p.331) and Appendix E (p.707).
+#### 📖 Textbook deep dive
+
+##### Murphy §17.3 "Support vector machines" (Chapter 17, Kernel methods) and §8.5 "Constrained optimization"
+* **§17.3.1 Large margin classifiers.** Murphy writes the classifier as $\mathbf w^\top\mathbf x+b$ and the margin of a point as its distance to the boundary; maximizing the smallest margin gives the same "minimize $\|\mathbf w\|^2$ with $y_i(\mathbf w^\top\mathbf x_i+b)\ge1$" problem as the slide (the $\mp b$ sign is the only notational difference).
+* **§17.3.2 The dual problem.** Using Lagrange multipliers $\alpha_i\ge0$, the problem becomes a maximization over $\boldsymbol\alpha$ with $\sum_i\alpha_iy_i=0$; $\mathbf w=\sum_i\alpha_iy_i\mathbf x_i$ and only the support vectors (those with $\alpha_i>0$) enter.
+* **§17.3.3 Soft margin classifiers.** Slack variables $\xi_i\ge0$ and the penalty $C\sum\xi_i$, as on the slide's last page; the hinge-loss form $\sum\max(0,1-y_if(\mathbf x_i))$ and the interpretation of $C$ as the inverse of a regularizer.
+* **§17.3.6 Connection with logistic regression** and **§17.3.8 How to choose the regularizer $C$** (cross-validation): matches 20.7–20.8.
+* **§8.5.1 Lagrange multipliers** and **§8.5.2 KKT conditions**: the stationary-point recipe of 20.6 and the inequality version (multipliers $\ge0$, complementary slackness).
+* *(Murphy page numbers were not checked against the book; use the section numbers.)*
+
+##### Bishop Chapter 7 "Sparse Kernel Machines" (p.325) and Appendix E (p.707)
+* **§7.1 Maximum margin classifiers (p.326).** The margin as the smallest perpendicular distance $y_n(\mathbf w^\top\phi(\mathbf x_n)+b)/\|\mathbf w\|$; the canonical form where the nearest points satisfy $t_n(\mathbf w^\top\phi(\mathbf x_n)+b)=1$ and the problem reduces to $\min\tfrac12\|\mathbf w\|^2$: exactly 20.3–20.5.
+* **§7.1.1 Overlapping class distributions (p.331).** Slack variables $\xi_n\ge0$: $\xi_n=0$ on or inside the correct margin boundary, $0<\xi_n\le1$ inside the margin, $\xi_n>1$ misclassified; objective $C\sum\xi_n+\tfrac12\|\mathbf w\|^2$: exactly 20.7.
+* **§7.1.2 Relation to logistic regression (p.336).** The hinge loss versus the logistic (cross-entropy) loss: the comparison table in 20.7.
+* **Appendix E Lagrange multipliers (p.707).** The method of 20.6, including inequality constraints (multiplier $\ge0$ with $\mathcal L=f-\lambda c$ for $c\ge0$).
+
+##### Solved exercises and conceptual checks
+
+**(a) Show the margin is $2/\|\mathbf w\|$.** $\mathbf x_i^\top\mathbf w=b-1$ and $\mathbf x_j^\top\mathbf w=b+1$ on the two curbs, so $(\mathbf x_j-\mathbf x_i)^\top\mathbf w=2$; dividing by $\|\mathbf w\|$ projects onto the unit normal and gives $d=2/\|\mathbf w\|$.
+
+**(b) If $\mathbf w$ is doubled and $b$ doubled, does the boundary change?** No: $\mathbf x^\top\mathbf w-b=0$ is the same set, but the margin lines become $\pm1$ of the new scale, so the street halves ($d=2/(2\|\mathbf w\|)$). That is why the margin condition fixes the scale at $\pm1$ and the optimizer shrinks $\|\mathbf w\|$.
+
+**(c) A point has $y_i=+1$ and $\mathbf x_i^\top\mathbf w-b=0.4$. What is $\xi_i$?** $y_i(\cdot)=0.4<1$, so $\xi_i=1-0.4=0.6$: correct side, inside the street.
+
+**(d) A point has $y_i=-1$ and $\mathbf x_i^\top\mathbf w-b=0.5$. What is $\xi_i$?** $y_i(\cdot)=-0.5$, so $\xi_i=1-(-0.5)=1.5>1$: misclassified.
+
+**(e) Which points influence a hard-margin SVM?** Only the support vectors (those exactly on a curb); removing any other point leaves the solution unchanged.
+
+**(f) Effect of $C$ on the street width.** Larger $C$ penalizes slack more, so the street narrows (see the table in 20.7: width 4.0 for $C=0.1$, 3.0 for $C\ge0.5$ here).
+
+#### ➕ Textbook extra
+* **The dual and the kernel trick** (Murphy §17.3.2 and §17.3.4, Bishop §7.1): maximize $\sum_i\lambda_i-\tfrac12\sum_{i,j}\lambda_i\lambda_jy_iy_j\mathbf x_i^\top\mathbf x_j$ subject to $\lambda_i\ge0$, $\sum_i\lambda_iy_i=0$; then $\mathbf w=\sum_i\lambda_iy_i\mathbf x_i$. For the two-point example of 20.6, $\lambda_1=\lambda_2=2$, $\mathbf w=2\cdot4-2\cdot3=2$ ✓, and the dual value $4-\tfrac12(64+36-96)=2$ equals the primal $\tfrac12w^2=2$ ✓. Because the data enter only through dot products, they can be replaced by a kernel $k(\mathbf x_i,\mathbf x_j)$ to get non-linear boundaries (beyond this lecture).
+* **SVMs for regression** (Murphy §17.3.10, Bishop §7.1.4 p.339): the $\varepsilon$-insensitive loss. **Multi-class SVMs** (Murphy §17.3.7, Bishop §7.1.3 p.338). **Relevance vector machines** (Bishop §7.2 p.345) as a probabilistic, sparser alternative.
+
+#### ✅ What you must be able to do
+
+* Compute the margin $d=2/\|\mathbf w\|$, the signed distance $(\mathbf x^\top\mathbf w-b)/\|\mathbf w\|$ and the slack $\xi_i=\max(0,1-y_i(\mathbf x_i^\top\mathbf w-b))$ for given numbers.
+* Write the one rule $y_i(\mathbf x_i^\top\mathbf w-b)\ge1$ and explain why it covers both classes.
+* State the hard-margin SVM and the soft-margin SVM, and say what a support vector and $C$ are.
+* Use a Lagrangian on a small equality-constrained problem (set every slope, including $\partial\mathcal L/\partial\lambda$, to zero).
+* Say when slack is needed (overlapping classes) and what $\xi_i>1$ means.
+
+---
+
 ## Part B. Mistakes found in the slides (Lectures 02–15)
 
 While checking every formula against the slides and textbooks we found these. They are small, but they can mislead you in an exam.
@@ -3130,6 +3304,10 @@ While checking every formula against the slides and textbooks we found these. Th
 | L17 slide 20 | Scores divided by a constant "C" | The standard choice is $\sqrt d$. |
 | L18 slide 7 | Function stays "underneath (or above)" a line | For a convex function the chord lies **above** the curve. |
 | L19 midterm example | Loss drops the $\frac12\theta_2^\top\phi$ term; $\sigma^2$ called "std. dev." | Keep the term (it comes from $\log\sigma$); $\sigma^2$ is the variance. |
+| L20 margin page | "$\mathbf x_i^\top\mathbf w$ quantifies the distance to the decision boundary" | Only proportional. Signed distance $=(\mathbf x^\top\mathbf w-b)/\|\mathbf w\|$. |
+| L20 Lagrangian | Constraint $c\ge0$ but solved as $c=0$ with $\mathcal L=f+\lambda c$ | Fine for an equality constraint. For $c\ge0$: $\mathcal L=f-\lambda c$ with $\lambda\ge0$ and the KKT conditions. |
+| L20 Lagrangian gradient | Entries written $\partial f/\dots$ | Should be $\partial\mathcal L/\dots$. |
+| L20 soft margin | $C$ is never defined | $C>0$ is the price of slack: large = narrow street, small = wide street. |
 
 (The Complete Study Notes list a few more, including typos in figure captions.)
 

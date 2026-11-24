@@ -2,7 +2,7 @@
 
 **Course:** CMPT 423 Machine Learning · **Instructor:** Lucas Lehnert · **Term:** Fall 2026 · **University of Saskatchewan** · **Language:** Python
 **Textbooks:** Murphy, *Probabilistic Machine Learning: An Introduction* (MIT Press, 2022; free at probml.github.io/pml-book/book1.html) and Bishop, *Pattern Recognition and Machine Learning* (2006).
-**Covers:** Lectures 02–19 (there is no Lecture 01 in the materials; L19 is the midterm example exercise and reference sheet). New lectures get added in the same format.
+**Covers:** Lectures 02–20 (there is no Lecture 01 in the materials; L19 is the midterm example exercise and reference sheet; L20 introduces support vector machines). New lectures get added in the same format.
 
 ---
 
@@ -107,7 +107,7 @@ All assignments are due at **4 pm CST**. (Weekdays computed from the calendar an
 | 12 | Dimensionality reduction, PCA |
 | 13 | Review |
 
-The uploaded lectures (02–19) cover weeks 1–7 of this list: tensors, probability, MLE, Git, linear algebra, linear/logistic/softmax regression, generalization, experiment reporting, statistics, **Bayes' law and MAP, ridge and lasso regularization, and the multilayer perceptron** (Lectures 13–15; Lecture 15 covers the first part of week 7). Later topics (feature selection details, sequence models/LLMs, gradient descent in depth, constrained optimization/SVMs, PCA…) will be added as lectures arrive; where the textbooks already touch them, a **➕ Textbook extra** mentions them.
+The uploaded lectures (02–20) cover weeks 1–7 of this list and the first part of week 11 (SVMs): tensors, probability, MLE, Git, linear algebra, linear/logistic/softmax regression, generalization, experiment reporting, statistics, **Bayes' law and MAP, ridge and lasso regularization, and the multilayer perceptron** (Lectures 13–15; Lecture 15 covers the first part of week 7). Later topics (feature selection details, the rest of constrained optimization and SVMs such as the dual and kernels, PCA…) will be added as lectures arrive; where the textbooks already touch them, a **➕ Textbook extra** mentions them.
 
 ---
 
@@ -130,6 +130,7 @@ Every lecture is one piece of that sentence:
 | **The prior belief**: which parameters were plausible *before* seeing data? | 13 Bayes' law and MAP |
 | **The brake on overfitting**: penalize big weights (ridge) or unneeded features (lasso) | 14 Lasso and ridge |
 | **The learned features**: let the model discover its own basis functions | 15 Multilayer perceptron |
+| **The widest street**: separate two classes with the largest margin, under constraints | 20 Support vector machines |
 | **The reporting**: how sure are we about a measured number? | 11 Experiment reporting, 12 Statistics |
 
 ### The chain of ideas
@@ -160,6 +161,8 @@ Every lecture is one piece of that sentence:
   minimize the loss: gradient descent, SGD, momentum, autodiff      (18)
         ↓
   midterm: the whole recipe on a new problem (Normal with mean AND variance) (19)
+        ↓
+  widest-margin classifier: SVM, Lagrangian, slack variables C (20)
 ```
 
 The **single most important idea** to carry through the course: *a loss function is a negative log-likelihood.* Squared error is what you get from a Gaussian assumption; binary cross-entropy is what you get from a Bernoulli assumption; softmax cross-entropy comes from a categorical assumption. Once you see that, three "different" models are one recipe: **write down $p(\text{data}\mid\theta)$, take $-\log$, minimize.**
@@ -190,9 +193,9 @@ Page numbers are printed page numbers. "§" is the section number.
 | 17 | Sequence models (RNN, attention, LLM) | §15.2–15.7 p.503–545 | Bishop ch.13 (background) |
 | 18 | Gradient descent | §8.1.3 convexity p.277; §8.2 first-order p.282–289; §8.2.4 momentum p.287; §8.4 SGD p.292–302 | §5.2.4 p.240 |
 | 19 | Midterm example and sheet | §13.2.4.4 heteroskedastic MLP p.433; §2.2 distributions | p.273 heteroscedastic |
+| 20 | Support vector machines | §17.3 SVMs (17.3.1 large margin, 17.3.3 soft margin, 17.3.6 vs logistic, 17.3.8 choosing C); §8.5 Constrained optimization (Lagrange, KKT); Murphy page numbers not checked | §7.1 Maximum margin classifiers p.326; §7.1.1 Overlapping classes p.331; §7.1.2 vs logistic p.336; Appendix E Lagrange multipliers p.707 |
 
 ---
-
 
 ## Lecture 02 — Tensor Arithmetic
 
@@ -388,7 +391,6 @@ Murphy does not cover views vs copies; this is a pure NumPy/software topic. The 
 * `*` is element-wise, `@` is matrix multiplication.
 
 ---
-
 
 ## Lecture 03 — Probability
 
@@ -600,7 +602,6 @@ The slides never state the **cdf**, **quantile**, **chain rule**, **Bayes' rule*
 
 ---
 
-
 ## Lecture 04 — Maximum Likelihood Estimation (MLE)
 
 **Why this lecture exists.** This is the single most important idea in the course. It answers: *given data and a model with adjustable parameters, which parameter values should I pick?* Answer: **the ones that make the data you actually saw as probable as possible.** Linear regression, logistic regression, softmax regression and the Gaussian/GMM of Assignment 1 are all fitted this way.
@@ -783,7 +784,6 @@ Murphy §4.5 (p.120): if you have 0 ones in 3 trials the MLE says $\theta=0$ ("i
 
 ---
 
-
 ## Lecture 05 — Git and GitLab
 
 **Why this lecture exists.** Assignments are handed in through Git, and the grader looks at **one specific snapshot** of your code identified by a *commit hash*. Doing this wrong can mean the grader sees the wrong (or no) code. This lecture is also the only one with **no textbook chapter** — the books are about maths, not tooling.
@@ -871,7 +871,6 @@ Neither Murphy nor Bishop covers Git. The nearest idea in the course is **reprod
 * Git tracks history so you can undo mistakes and compare versions.
 
 ---
-
 
 ## Lecture 06 — Linear Algebra
 
@@ -1001,7 +1000,6 @@ The slides skip SVD, eigenvalues and matrix derivatives. They return for PCA (we
 * Cholesky $\boldsymbol\Sigma=\mathbf L\mathbf L^\top$ turns white noise into correlated samples.
 
 ---
-
 
 ## Lecture 07 — Linear Regression
 
@@ -1184,7 +1182,6 @@ Not in the slides: weighted LS (Murphy §11.2.2.4, p.376), lasso and elastic net
 * Training error always falls with a richer model — but that is not generalization (Lecture 10).
 
 ---
-
 
 ## Lecture 08 — Logistic Regression
 
@@ -1425,7 +1422,6 @@ Murphy §10.5 (p.363–367) shows predictions averaged over a posterior on $\mat
 
 ---
 
-
 ## Lecture 09 — Softmax Regression
 
 **Why this lecture exists.** Logistic regression answers yes/no. Many questions have *several* answers: which digit (0–9) is in this image? Softmax regression extends logistic regression to $C$ classes and introduces **cross-entropy**, the loss used by almost every classifier (including large neural networks).
@@ -1576,7 +1572,6 @@ Murphy §10.5 (p.363–368) gives multiclass Bayesian predictions with $\exp(\ka
 * Separable classes ⇒ the unregularized MLE does not exist; regularize.
 
 ---
-
 
 ## Lecture 10 — Generalization
 
@@ -1798,7 +1793,6 @@ Regularization ($\ell_2$ penalty = MAP with a Gaussian prior; Murphy §4.5.3 "we
 
 ---
 
-
 ## Lecture 11 — Experiment Reporting
 
 **Why this lecture exists.** You train model A and model B and A scores higher. Is A *really* better, or did you just get lucky this run? Every ML experiment has randomness (initial weights, data shuffling, sampling), so a single number is not evidence. This lecture gives the standard tool for honest reporting: **run it several times, report the mean with its standard error.**
@@ -1944,7 +1938,6 @@ The slides stop at "intervals apart ⇒ significant". Murphy adds: the bootstrap
 * **Tune the baseline as much as your method** (every combination repeated) — otherwise you are deflating a baseline.
 
 ---
-
 
 ## Lecture 12 — Statistics
 
@@ -2131,7 +2124,6 @@ Murphy §6.1.5 (perplexity, used to evaluate language models — week 8 "sequenc
 * Report two models with **mean ± SEM**; separated intervals suggest a real difference.
 
 ---
-
 
 ## Lecture 13 — Bayes' Law and Maximum A Posteriori (MAP) Estimation
 
@@ -2328,7 +2320,6 @@ Murphy §4.6.2.9 (posterior predictive: average predictions over the posterior i
 * The prior is an **inductive bias**; its influence fades as the data set grows.
 
 ---
-
 ## Lecture 14 — Lasso and Ridge Regression
 
 **About the slides.** Seventeen slides (numbered 2–4, 7–17; slides 5–6 are not in the PDF). They cover: the Bayesian approach (recap of Lecture 13), basis functions in linear regression, the family of priors $p(\theta)\propto e^{-\lambda\sum|\theta_i|^p}$, how prior and likelihood combine into a loss, **ridge** ($L^2$) and **lasso** ($L^1$) regression, regularization in general, a definition of MAP estimation, and two real-data examples (prostate cancer data, taken from Murphy's Figure 11.10). Handwritten red notes on the slides are included below.
@@ -2581,7 +2572,6 @@ Murphy §11.4.8 (**elastic net**: both $L^1$ and $L^2$ penalties; keeps groups o
 * **MAP** = MLE with a prior; the prior is an **inductive bias**. Other examples: weight decay in deep learning and weight-initialization heuristics (Xavier).
 
 ---
-
 ## Lecture 15 — Multilayer Perceptron (MLP)
 
 **About the slides.** About forty slides (the PDF has 34 pages; slide numbers run to 39 because the PDF skips a few). Order: recap of MAP and lasso → "can we *learn* the basis functions?" → neurons and the Nobel Prize 2024 (physics, for foundational neural-network work) → the **perceptron** and its algorithm (Iris examples) → why it is not expressive enough → **adaptive sigmoid bases** → the **MLP** $\hat{\mathbf y}=\mathbf g(\mathbf W\mathbf h(\mathbf V\mathbf x))$ → **probabilistic modelling** (output activation + loss) → **activation functions** → **network architecture** → the **universal approximation theorem** → depth vs width → **regularization for neural networks** (weight decay, data augmentation, noise robustness, early stopping, dropout) → summary.
@@ -2914,7 +2904,6 @@ Murphy §13.4.4 **residual connections** (the skip connections of the architectu
 * **Regularize:** weight decay, data augmentation, noise (small-batch SGD ⇒ flat minima), early stopping, **dropout** (test time: multiply weights by the keep probability $1-p$, or MC-dropout).
 
 ---
-
 ## Lecture 16 — Markov Assumption and Hidden State Models
 
 **About the slides.** This lecture is **one long handwritten page** (no slide numbers), so the sections below follow the order of the page. Order: languages and **deterministic finite automata (DFA)** → the **Markov chain** and the **Markov assumption** → **sequence modelling** and language models → the model with **hidden states** $h_t$ (and the sum over all hidden sequences) → why we must **learn a hidden representation**.
@@ -3088,7 +3077,6 @@ Murphy §15.2.7–15.2.8 (GRU/LSTM, beam search) and Murphy's book 2 chapter on 
 * If $h_t$ is **not** Markovian the model cannot generate sequences correctly; sequence tasks therefore require **learning a hidden representation** (RNNs, Lecture 17).
 
 ---
-
 ## Lecture 17 — Sequence Modelling (RNNs, Attention, Transformers and LLMs)
 
 **About the slides.** 41 slides (PDF page = slide number). Order: **marginal distributions** (slides 2–4) → **vec2seq** RNN and caption generation (5–10) → **seq2vec** classification, including bidirectional (11–13) → **seq2seq** translation (14–16) → **gradients for RNNs** and RNN blocks (17–18) → **attention** (19–23) → **Transformers** and **LLMs** (24–29) → **autoregressive inference** (30–36) → **teacher forcing** and **LLM = maximum likelihood** (37–38) → **guardrails and safety** (40) → summary (41).
@@ -3310,7 +3298,6 @@ Murphy §15.3 (1-d CNNs for sequences, WaveNet), §15.5.4 "putting it all togeth
 * **LLM = MLE:** $\boldsymbol\theta^*\in\arg\max p(\mathcal D|\boldsymbol\theta)$; trained with **teacher forcing**; sampled **autoregressively** until `<eos>`; **safety** is hard because the model only imitates data (alignment uses reinforcement learning).
 
 ---
-
 ## Lecture 18 — Gradient Descent
 
 **About the slides.** 24 PDF pages; the slide numbers run to 25 because one slide (number 20) is not in the PDF. Order: recap of maximum likelihood (2) → **optimization in ML** (3) → two loss/gradient examples (4) → the **gradient** (5) → **gradient descent** (6) → **convex** and **non-convex** functions (7–11) → gradient descent for logistic regression and learning rates (12) → **stochastic gradient descent** (13–17) → **oscillations** and **momentum** (18–19) → **algorithm variants** (21) → **PyTorch** (22) → **backprop and automatic differentiation** (23) → summary (24).
@@ -3552,7 +3539,6 @@ Murphy §8.2.3 (convergence rates, with proofs for quadratics), §8.3 (second-or
 * **PyTorch autodiff:** forward pass stores inputs, backward pass multiplies the local derivatives (chain rule); no hand-derived gradients.
 
 ---
-
 ## Lecture 19 — Midterm Example Exercise and Reference Sheet
 
 **Midterm logistics (from the course page).** Monday **Nov 16**, in class (11:30–12:20), **on paper**, in **teams of two**, **simple calculator only**; multiple-choice and/or long-answer questions. The **reference sheet** (section 19.5) is handed out with the exam, so you do not need to memorize distribution formulas, but you must know how to *use* them.
@@ -3629,7 +3615,214 @@ Murphy §2.7 (exponential family), §12.3 (generalized linear models, canonical 
 * The reference sheet gives seven distributions and seven identities; know how to apply them.
 
 ---
+## Lecture 20 — Support Vector Machines: Margin and Constrained Optimization
 
+**About the slides.** One handwritten page (a single long PDF page, no slide numbers). Order: **dot product and projection** → the **margin picture** and the distance to the decision boundary → the **margin $d=2/\|\mathbf w\|$** → the single condition $y_i(\mathbf x_i^\top\mathbf w-b)\ge1$ → the SVM as a **constrained optimization problem** → solving constrained problems with a **Lagrangian** → **slack variables** for data that cannot be separated (the soft margin).
+
+**Big idea in one sentence.** Of all the lines that separate two classes, pick the one with the **widest empty street** around it. A wider street means a smaller $\|\mathbf w\|$, so the SVM is "**minimize $\tfrac12\|\mathbf w\|^2$ while keeping every point on the correct side of its curb**"; when no such line exists, let points cross the curb by a **slack** $\xi_i\ge0$ and charge $C\sum\xi_i$ for it.
+
+**Notation of this lecture.** Labels are $y_i\in\{-1,+1\}$ (not $\{0,1\}$). The decision function is $\mathbf x^\top\mathbf w-b$, with a **minus** sign on $b$. (Murphy and Bishop write $\mathbf w^\top\mathbf x+b$; same model with $b$ replaced by $-b$.)
+
+### 20.1 Dot product and projection (slide top)
+
+For two vectors $\mathbf a,\mathbf b$ with angle $\theta$ between them,
+$$\mathbf a^\top\mathbf b=\|\mathbf a\|\,\|\mathbf b\|\cos\theta.$$
+Drop a perpendicular from the tip of $\mathbf a$ onto the line through $\mathbf b$: the shadow of $\mathbf a$ along $\mathbf b$ has length $\|\mathbf a\|\cos\theta$. So
+
+* if $\|\mathbf b\|=1$, then $\mathbf a^\top\mathbf b=\|\mathbf a\|\cos\theta$ **is** the projection (the signed length of the shadow);
+* if $\|\mathbf b\|=\beta$, the dot product is the projection **scaled by $\beta$**: $\mathbf a^\top\mathbf b=\beta\cdot(\text{shadow length})$. To get the shadow, divide by $\|\mathbf b\|$: shadow $=\mathbf a^\top\mathbf b/\|\mathbf b\|=\mathbf a^\top\frac{\mathbf b}{\|\mathbf b\|}$.
+
+*Example.* $\mathbf a=(3,4)$, $\mathbf b=(2,0)$. $\mathbf a^\top\mathbf b=6$. Also $\|\mathbf a\|=5$, $\|\mathbf b\|=2$, $\cos\theta=3/5$, so $5\cdot2\cdot0.6=6$ ✓. The shadow of $\mathbf a$ on the $x_1$-axis is $6/2=3$ ✓ (just its first coordinate).
+
+### 20.2 Which side of the boundary? (slide middle, left)
+
+A linear classifier uses a vector $\mathbf w$ and a scalar $b$. The **decision boundary** is the set of points with
+$$\mathbf x^\top\mathbf w-b=0.$$
+$\mathbf w$ is perpendicular to this line, so it points from the $(-)$ side toward the $(+)$ side. The slide's reading of $\mathbf x_i^\top\mathbf w$: it **quantifies the distance to the decision boundary**. Precisely, $\mathbf x^\top\frac{\mathbf w}{\|\mathbf w\|}$ is the shadow of $\mathbf x$ along the direction of $\mathbf w$ (20.1), and the boundary sits at shadow $=b/\|\mathbf w\|$. Hence the **signed distance** from $\mathbf x$ to the boundary is
+$$\frac{\mathbf x^\top\mathbf w-b}{\|\mathbf w\|}\qquad(\text{positive on the }+\text{ side}).$$
+
+The slide marks three cases:
+
+| condition | where $\mathbf x_i$ lies | equation |
+|---|---|---|
+| $\mathbf x_i^\top\mathbf w-b=0$ | on the decision boundary | $\mathbf x_i^\top\mathbf w=b$ |
+| $\mathbf x_i^\top\mathbf w-b=-1$ | on one margin (the $(-1)$ line) | $\mathbf x_i^\top\mathbf w=b-1\quad(1)$ |
+| $\mathbf x_i^\top\mathbf w-b=+1$ | on the other margin (the $(+1)$ line) | $\mathbf x_i^\top\mathbf w=b+1\quad(2)$ |
+
+*Example.* $\mathbf w=(3,4)$, $b=5$, $\|\mathbf w\|=5$, point $\mathbf x=(3,3)$: $\mathbf x^\top\mathbf w=21$, so the signed distance is $(21-5)/5=\mathbf{3.2}$, on the $+$ side.
+
+**The point $\mathbf x^*$ in the slide's second figure** is the point of the boundary on the same ray as $\mathbf w$ (so $\cos\theta=1$): $\mathbf x^{*\top}\mathbf w=\|\mathbf x^*\|\|\mathbf w\|\cos\theta=\|\mathbf x^*\|\|\mathbf w\|=b$. Therefore the **distance from the origin to the decision boundary is $\|\mathbf x^*\|=b/\|\mathbf w\|$**.
+
+### 20.3 The margin $d=2/\|\mathbf w\|$ (slide middle, right)
+
+The **margin** $d$ is the width of the empty street between the two margin lines. Take $\mathbf x_i$ on the $(-1)$ margin and $\mathbf x_j$ on the $(+1)$ margin. The gap between two parallel lines is the shadow of $\mathbf x_j-\mathbf x_i$ along the unit vector $\mathbf w/\|\mathbf w\|$ (it does not matter that $\mathbf x_j-\mathbf x_i$ is slanted; only its component along $\mathbf w$ counts):
+$$d=(\mathbf x_j-\mathbf x_i)^\top\frac{\mathbf w}{\|\mathbf w\|}=\frac{\mathbf x_j^\top\mathbf w-\mathbf x_i^\top\mathbf w}{\|\mathbf w\|}\overset{(1),(2)}{=}\frac{(b+1)-(b-1)}{\|\mathbf w\|}=\boxed{\frac{2}{\|\mathbf w\|}}.$$
+
+**So maximizing the margin means minimizing $\|\mathbf w\|$.**
+
+*Example.* $\mathbf w=(1,1)$, $b=4$, $\mathbf x_i=(1,2)$, $\mathbf x_j=(2,3)$. Then $\mathbf x_i^\top\mathbf w-b=3-4=-1$ ✓ and $\mathbf x_j^\top\mathbf w-b=5-4=+1$ ✓. $d=(1,1)\cdot(1,1)/\sqrt2=2/\sqrt2=\sqrt2=1.414$, and $2/\|\mathbf w\|=2/\sqrt2=1.414$ ✓. The origin-to-boundary distance is $b/\|\mathbf w\|=4/\sqrt2=2.83$.
+
+### 20.4 One condition for both classes
+
+Given data $\mathcal D=\{(\mathbf x_i,y_i)\mid y_i\in\{-1,+1\}\}$, we look for $\mathbf w$ and $b$ such that **for all $i$**
+$$y_i\big(\mathbf x_i^\top\mathbf w-b\big)\ge1.$$
+Why one inequality covers both classes (the slide's two examples):
+
+* $y_i=-1$: we need $\mathbf x_i^\top\mathbf w-b\le-1$; multiplying by $y_i=-1$ flips it to $-(\mathbf x_i^\top\mathbf w-b)\ge1$ ✓.
+* $y_i=+1$: we need $\mathbf x_i^\top\mathbf w-b\ge1$, already of the form ✓.
+
+Read $y_i(\mathbf x_i^\top\mathbf w-b)$ as "how far on the **correct** side, in margin units". It is $\ge1$ when the point is correct **and** outside the street, $=1$ exactly on a curb, between $0$ and $1$ when correct but inside the street, and negative when **misclassified**.
+
+### 20.5 The SVM as constrained optimization
+
+If the data are correctly separated by a street of width $d=2/\|\mathbf w\|$, then all $y_i(\mathbf x_i^\top\mathbf w-b)\ge1$ hold. The widest street comes from the smallest $\|\mathbf w\|$, so
+$$\boxed{\ \min_{\mathbf w,b}\ \tfrac12\|\mathbf w\|_2^2\quad\text{such that}\quad y_i(\mathbf x_i^\top\mathbf w-b)\ge1\ \ \forall i\ }$$
+(The $\tfrac12$ and the square change nothing about the minimizer; they make the derivative clean.) This is a **constrained** optimization problem: unlike Lecture 18 we cannot just follow the negative gradient, because the answer must stay inside the allowed region. The points that end **exactly on a curb** ($y_i(\mathbf x_i^\top\mathbf w-b)=1$) are the **support vectors**: they alone decide the line; moving any other point (without crossing the street) changes nothing.
+
+**Worked example on the ten students (one dimension).** Take the hours $h$ as the single feature. The passed students have $h\in\{4,6,7,8\}$, the failed ones $h\in\{1,2,2,3,3,5\}$. Student 6 failed with $h=5$, which lies **between** passed students, so **all ten are not separable** (that case comes in 20.7). Drop student 6 and the other nine **are** separable: the failed $h\le3$, the passed $h\ge4$. The widest street runs from $h=3$ to $h=4$: boundary at $h=3.5$, margin $d=1$. Then $d=2/\|w\|=1$ gives $w=2$, and $w\cdot3.5-b=0$ gives $b=7$. Check the constraints for the closest points: $h=4$ (passed): $+1(4\cdot2-7)=1\ge1$ ✓ on the curb; $h=3$ (failed): $-1(3\cdot2-7)=1\ge1$ ✓ on the curb. All other students have a value $>1$ (e.g. $h=6$: $5$; $h=1$: $-(2-7)=5$). The support vectors are $h=3$ (two students) and $h=4$. Also $b/\|w\|=7/2=3.5$ is the distance from the origin to the boundary ✓.
+
+### 20.6 Constrained optimization with a Lagrangian (slides, bottom left)
+
+The slide's recipe. To solve
+$$\min_{\boldsymbol\theta}f(\boldsymbol\theta)\quad\text{s.t.}\quad c(\boldsymbol\theta)\ \ (\ge)\ 0,$$
+build the **Lagrangian** $\mathcal L(\boldsymbol\theta,\lambda)=f(\boldsymbol\theta)+\lambda\,c(\boldsymbol\theta)$ with a new variable $\lambda$ (the **Lagrange multiplier**), and look for the stationary point. Setting the gradient to zero gives two conditions:
+$$\nabla_{\boldsymbol\theta}\mathcal L=\nabla f(\boldsymbol\theta)+\lambda\nabla c(\boldsymbol\theta)=\mathbf 0,\qquad\frac{\partial\mathcal L}{\partial\lambda}=c(\boldsymbol\theta)=0.$$
+For $\boldsymbol\theta\in\mathbb R^n$ the gradient of the Lagrangian is the $(n+1)$-vector $\big[\frac{\partial\mathcal L}{\partial\theta_1},\dots,\frac{\partial\mathcal L}{\partial\theta_n},\frac{\partial\mathcal L}{\partial\lambda}\big]^\top$: the extra last entry is the constraint itself, so setting it to zero **enforces the constraint**. Geometrically, at the optimum the gradient of $f$ is parallel to the gradient of $c$ (you cannot go further downhill without leaving the constraint).
+
+*Worked example (equality constraint).* Minimize $f=x_1^2+x_2^2$ subject to $c=x_1+x_2-1=0$. $\mathcal L=x_1^2+x_2^2+\lambda(x_1+x_2-1)$. Conditions: $2x_1+\lambda=0$, $2x_2+\lambda=0$, $x_1+x_2=1$. So $x_1=x_2=\tfrac12$, $\lambda=-1$, $f^*=\tfrac12$ ✓ (the point of the line closest to the origin).
+
+**⚠️ A caveat about the slide.** The slide writes the constraint as $c\ge0$ (an **inequality**) but then solves $c=0$ and says to take the $\arg\min$ over both $\boldsymbol\theta$ and $\lambda$. That is exact for an **equality** constraint (as above). For an **inequality** constraint the standard form is $\mathcal L=f(\boldsymbol\theta)-\lambda c(\boldsymbol\theta)$ with $\lambda\ge0$ (minimize over $\boldsymbol\theta$, maximize over $\lambda$), and the **KKT conditions** say: $\lambda_i\ge0$, and $\lambda_ic_i(\boldsymbol\theta)=0$ (a constraint that is not tight has $\lambda_i=0$). In the SVM this is why only the **support vectors** (tight constraints) get a nonzero multiplier.
+
+*Worked example (the SVM with two points).* Points $x=3$ ($y=-1$) and $x=4$ ($y=+1$) in 1-D. Constraints: $4w-b-1\ge0$ and $b-3w-1\ge0$ (from $y_i(x_iw-b)\ge1$). $\mathcal L=\tfrac12w^2-\lambda_1(4w-b-1)-\lambda_2(b-3w-1)$. Stationarity: $\partial_w$: $w-4\lambda_1+3\lambda_2=0$; $\partial_b$: $\lambda_1-\lambda_2=0$. So $\lambda_1=\lambda_2=\lambda$ and $w=\lambda$. With both constraints tight: $4w-b=1$ and $b-3w=1$, adding: $w=2$, $b=7$, so $\lambda_1=\lambda_2=2\ge0$ ✓. The same line as the ten-student street (it is determined by the two nearest points).
+
+### 20.7 When the data cannot be separated: slack and the soft margin (slide bottom)
+
+**What if no line separates the classes with margin $d$?** Then the constraints $y_i(\mathbf x_i^\top\mathbf w-b)\ge1$ cannot all hold and the optimization problem has **no solution**. Fix: give every point a **slack variable** $\xi_i\ge0$, the amount by which it is allowed to violate its margin:
+$$\boxed{\ \min_{\mathbf w,b,\boldsymbol\xi}\ \tfrac12\|\mathbf w\|_2^2+C\sum_i\xi_i\quad\text{s.t.}\quad y_i(\mathbf x_i^\top\mathbf w-b)\ge1-\xi_i,\ \ \xi_i\ge0\ }$$
+equivalently $y_i(\mathbf x_i^\top\mathbf w-b)-1+\xi_i\ge0$. The slack variables "**soften**" the margin constraints, and **we can always find some solution** (take $\xi_i$ large enough). $C>0$ is the price of slack (the slide does not name it; it is the standard constant).
+
+**What $\xi_i$ means.** $\xi_i=0$: correct and outside the street. $0<\xi_i\le1$: correct but inside the street. $\xi_i>1$: on the **wrong** side of the boundary (misclassified). At the optimum the best slack is exactly
+$$\xi_i=\max\big(0,\ 1-y_i(\mathbf x_i^\top\mathbf w-b)\big),$$
+the **hinge loss** of the point. So the soft-margin SVM is the unconstrained problem $\tfrac12\|\mathbf w\|^2+C\sum_i\max(0,1-y_i(\mathbf x_i^\top\mathbf w-b))$: a **regularizer plus a loss**, the same shape as ridge regression (Lecture 14), with $\lambda=\tfrac1{2C}$ playing the role of the ridge weight (small $C$ = strong regularization).
+
+**The role of $C$.**
+
+* **small $C$:** slack is cheap, so the street is wide and many points may sit inside it or cross it (high bias, low variance);
+* **large $C$:** slack is expensive, so the street narrows to classify nearly everything correctly (low bias, high variance; as $C\to\infty$ it approaches the hard margin when the data are separable). Choose $C$ by validation (Lecture 10).
+
+**Worked example: all ten students (1-D, not separable).** Minimizing the soft-margin objective gives
+
+| $C$ | $w$ | $b$ | boundary $b/w$ | margin $2/w$ | slacks $\xi_i$ (nonzero ones) | $\sum\xi_i$ | objective |
+|---|---|---|---|---|---|---|---|
+| 0.1 | 0.5 | 2.5 | $h=5.0$ | 4.0 | $h{=}4$: 1.5, $h{=}5$: 1.0, $h{=}6$: 0.5 | 3.0 | 0.425 |
+| 1 | 2/3 | 3 | $h=4.5$ | 3.0 | $h{=}4$: 1.33, $h{=}5$: 1.33 | 2.67 | 2.889 |
+| 100 | 2/3 | 3 | $h=4.5$ | 3.0 | same as $C=1$ | 2.67 | 266.9 |
+
+For $C=1$ check $h=4$ (passed, $y=+1$): $y(hw-b)=4\cdot\tfrac23-3=-\tfrac13$, so $\xi=1-(-\tfrac13)=\tfrac43$ ✓. For $h=5$ (failed, $y=-1$): $-(5\cdot\tfrac23-3)=-\tfrac13$, so $\xi=\tfrac43$ ✓. Both have $\xi>1$: the soft-margin line **misclassifies two students** (the passed student with 4 hours and the failed student with 5 hours), while the students at $h=3$ (twice) and $h=6$ sit exactly on the curbs ($\xi=0$, $y(hw-b)=1$). The objective is $\tfrac12\cdot\tfrac49+1\cdot\tfrac83=0.222+2.667=2.889$ ✓. With the small value $C=0.1$ the street is wider (4.0) and three students violate it.
+
+*A lesson from the numbers.* Using the narrow hard-margin line from 20.5 ($w=2,b=7$) would misclassify only **one** student (the failed one with 5 hours), but its slack is $\xi=1-(-(10-7))=4$ and the objective is $2+4=6$, much worse than $2.889$. The hinge loss charges **linearly** for how far a point is on the wrong side, so a single far-away violation costs more than two mild ones.
+
+**Margin loss comparison** (per point, as a function of $m=y(\mathbf x^\top\mathbf w-b)$):
+
+| $m$ | $-1$ | $0$ | $1$ | $2$ |
+|---|---|---|---|---|
+| hinge $\max(0,1-m)$ | 2 | 1 | 0 | 0 |
+| logistic $\log(1+e^{-m})$ | 1.313 | 0.693 | 0.313 | 0.127 |
+| 0–1 loss | 1 | (1) | 0 | 0 |
+
+The hinge loss is exactly zero once a point is beyond the margin (so such points never influence the line), while logistic regression keeps a small positive loss and pushes the boundary a little farther from every point.
+
+### 20.8 How Lecture 20 fits the rest of the course
+
+* **Same recipe, different loss.** A model $\mathbf x^\top\mathbf w-b$, a loss (hinge instead of cross-entropy), and a regularizer ($\|\mathbf w\|^2$, as in ridge) combined as in Lecture 14. The hinge objective is convex, so Lecture 18's convexity argument applies; it is not smooth at $m=1$, but **sub-gradient** steps still work (code below).
+* **Not a probability model.** Unlike Lecture 8 there is no $p(y|\mathbf x)$ here, so there is no maximum-likelihood derivation; the SVM score $\mathbf x^\top\mathbf w-b$ is a distance, not a probability.
+* **New tool: constraints.** Lecture 18 only dealt with unconstrained minimization; the Lagrangian turns a constrained problem into stationarity conditions.
+
+### 20.9 Summary
+
+* The margin is the width of the street: $d=\dfrac{2}{\|\mathbf w\|}$. Decision boundary $\mathbf x^\top\mathbf w=b$, margins $\mathbf x^\top\mathbf w=b\pm1$.
+* Correct and outside the street for every point: $y_i(\mathbf x_i^\top\mathbf w-b)\ge1$.
+* Hard-margin SVM: $\min\tfrac12\|\mathbf w\|^2$ s.t. $y_i(\mathbf x_i^\top\mathbf w-b)\ge1$.
+* Constraints are handled by a Lagrangian ($\nabla\mathcal L=\mathbf 0$ includes $\partial\mathcal L/\partial\lambda=c=0$).
+* Non-separable data: slack $\xi_i\ge0$, $\min\tfrac12\|\mathbf w\|^2+C\sum\xi_i$; always solvable. $\xi_i$ is the hinge loss at the optimum.
+
+```python
+import numpy as np
+h = np.array([4, 2, 6, 1, 3, 5, 7, 3, 8, 2.]); t = np.array([1, 0, 1, 0, 0, 0, 1, 0, 1, 0.])
+y = 2 * t - 1                                   # labels in {-1, +1}
+
+# --- projection / margin examples
+a, b = np.array([3, 4.]), np.array([2, 0.])
+print(a @ b, a @ b / np.linalg.norm(b))                      # 6.0 and shadow 3.0
+w, bb = np.array([1, 1.]), 4
+xi_, xj = np.array([1, 2.]), np.array([2, 3.])
+print(xi_ @ w - bb, xj @ w - bb, (xj - xi_) @ w / np.linalg.norm(w), 2 / np.linalg.norm(w))  # -1 1 1.414 1.414
+print((np.array([3, 3.]) @ np.array([3, 4.]) - 5) / 5)       # signed distance 3.2
+
+# --- hard margin on nine students (student 6, h=5 failed, is dropped): w=2, b=7
+m = np.arange(10) != 5
+print(np.all(y[m] * (h[m] * 2 - 7) >= 1), 2 / 2)             # True margin 1.0
+
+# --- soft margin on all ten students by sub-gradient descent (Lecture 18 idea)
+def fit(C, steps=200000):
+    w, b = 0., 0.
+    for k in range(1, steps + 1):
+        a = 0.01 / (1 + k / 5000)                            # decreasing step size
+        v = y * (h * w - b) < 1                              # points inside the street or wrong
+        w -= a * (w - C * np.sum(y[v] * h[v])); b -= a * C * np.sum(y[v])
+    return w, b
+for C in (0.1, 1):
+    w, b = fit(C); xi = np.maximum(0, 1 - y * (h * w - b))
+    print(C, round(w, 2), round(b, 2), b / w, 2 / w, xi.round(2), 0.5 * w * w + C * xi.sum())
+# C=0.1: w 0.5 b 2.5 boundary 5.0 margin 4.0, objective 0.425
+# C=1  : w 0.67 b 3.0 boundary 4.5 margin 3.0, slack 1.33 for h=4 and h=5, objective 2.889
+```
+
+(In practice a library solver such as `sklearn.svm.SVC(kernel="linear", C=C)` gives the same solution; it uses the opposite sign for $b$.)
+
+#### 📖 Textbook deep dive
+
+##### Murphy §17.3 "Support vector machines" (Chapter 17, Kernel methods) and §8.5 "Constrained optimization"
+* **§17.3.1 Large margin classifiers.** Murphy writes the classifier as $\mathbf w^\top\mathbf x+b$ and the margin of a point as its distance to the boundary; maximizing the smallest margin gives the same "minimize $\|\mathbf w\|^2$ with $y_i(\mathbf w^\top\mathbf x_i+b)\ge1$" problem as the slide (the $\mp b$ sign is the only notational difference).
+* **§17.3.2 The dual problem.** Using Lagrange multipliers $\alpha_i\ge0$, the problem becomes a maximization over $\boldsymbol\alpha$ with $\sum_i\alpha_iy_i=0$; $\mathbf w=\sum_i\alpha_iy_i\mathbf x_i$ and only the support vectors (those with $\alpha_i>0$) enter.
+* **§17.3.3 Soft margin classifiers.** Slack variables $\xi_i\ge0$ and the penalty $C\sum\xi_i$, as on the slide's last page; the hinge-loss form $\sum\max(0,1-y_if(\mathbf x_i))$ and the interpretation of $C$ as the inverse of a regularizer.
+* **§17.3.6 Connection with logistic regression** and **§17.3.8 How to choose the regularizer $C$** (cross-validation): matches 20.7–20.8.
+* **§8.5.1 Lagrange multipliers** and **§8.5.2 KKT conditions**: the stationary-point recipe of 20.6 and the inequality version (multipliers $\ge0$, complementary slackness).
+* *(Murphy page numbers were not checked against the book; use the section numbers.)*
+
+##### Bishop Chapter 7 "Sparse Kernel Machines" (p.325) and Appendix E (p.707)
+* **§7.1 Maximum margin classifiers (p.326).** The margin as the smallest perpendicular distance $y_n(\mathbf w^\top\phi(\mathbf x_n)+b)/\|\mathbf w\|$; the canonical form where the nearest points satisfy $t_n(\mathbf w^\top\phi(\mathbf x_n)+b)=1$ and the problem reduces to $\min\tfrac12\|\mathbf w\|^2$: exactly 20.3–20.5.
+* **§7.1.1 Overlapping class distributions (p.331).** Slack variables $\xi_n\ge0$: $\xi_n=0$ on or inside the correct margin boundary, $0<\xi_n\le1$ inside the margin, $\xi_n>1$ misclassified; objective $C\sum\xi_n+\tfrac12\|\mathbf w\|^2$: exactly 20.7.
+* **§7.1.2 Relation to logistic regression (p.336).** The hinge loss versus the logistic (cross-entropy) loss: the comparison table in 20.7.
+* **Appendix E Lagrange multipliers (p.707).** The method of 20.6, including inequality constraints (multiplier $\ge0$ with $\mathcal L=f-\lambda c$ for $c\ge0$).
+
+##### Solved exercises and conceptual checks
+
+**(a) Show the margin is $2/\|\mathbf w\|$.** $\mathbf x_i^\top\mathbf w=b-1$ and $\mathbf x_j^\top\mathbf w=b+1$ on the two curbs, so $(\mathbf x_j-\mathbf x_i)^\top\mathbf w=2$; dividing by $\|\mathbf w\|$ projects onto the unit normal and gives $d=2/\|\mathbf w\|$.
+
+**(b) If $\mathbf w$ is doubled and $b$ doubled, does the boundary change?** No: $\mathbf x^\top\mathbf w-b=0$ is the same set, but the margin lines become $\pm1$ of the new scale, so the street halves ($d=2/(2\|\mathbf w\|)$). That is why the margin condition fixes the scale at $\pm1$ and the optimizer shrinks $\|\mathbf w\|$.
+
+**(c) A point has $y_i=+1$ and $\mathbf x_i^\top\mathbf w-b=0.4$. What is $\xi_i$?** $y_i(\cdot)=0.4<1$, so $\xi_i=1-0.4=0.6$: correct side, inside the street.
+
+**(d) A point has $y_i=-1$ and $\mathbf x_i^\top\mathbf w-b=0.5$. What is $\xi_i$?** $y_i(\cdot)=-0.5$, so $\xi_i=1-(-0.5)=1.5>1$: misclassified.
+
+**(e) Which points influence a hard-margin SVM?** Only the support vectors (those exactly on a curb); removing any other point leaves the solution unchanged.
+
+**(f) Effect of $C$ on the street width.** Larger $C$ penalizes slack more, so the street narrows (see the table in 20.7: width 4.0 for $C=0.1$, 3.0 for $C\ge0.5$ here).
+
+#### ➕ Textbook extra
+* **The dual and the kernel trick** (Murphy §17.3.2 and §17.3.4, Bishop §7.1): maximize $\sum_i\lambda_i-\tfrac12\sum_{i,j}\lambda_i\lambda_jy_iy_j\mathbf x_i^\top\mathbf x_j$ subject to $\lambda_i\ge0$, $\sum_i\lambda_iy_i=0$; then $\mathbf w=\sum_i\lambda_iy_i\mathbf x_i$. For the two-point example of 20.6, $\lambda_1=\lambda_2=2$, $\mathbf w=2\cdot4-2\cdot3=2$ ✓, and the dual value $4-\tfrac12(64+36-96)=2$ equals the primal $\tfrac12w^2=2$ ✓. Because the data enter only through dot products, they can be replaced by a kernel $k(\mathbf x_i,\mathbf x_j)$ to get non-linear boundaries (beyond this lecture).
+* **SVMs for regression** (Murphy §17.3.10, Bishop §7.1.4 p.339): the $\varepsilon$-insensitive loss. **Multi-class SVMs** (Murphy §17.3.7, Bishop §7.1.3 p.338). **Relevance vector machines** (Bishop §7.2 p.345) as a probabilistic, sparser alternative.
+
+#### ✅ Key takeaways
+* **Margin:** boundary $\mathbf x^\top\mathbf w=b$, curbs $\mathbf x^\top\mathbf w=b\pm1$, street width $d=2/\|\mathbf w\|$; signed distance of a point $=(\mathbf x^\top\mathbf w-b)/\|\mathbf w\|$.
+* **Correct and outside the street:** $y_i(\mathbf x_i^\top\mathbf w-b)\ge1$ for labels $y_i\in\{-1,+1\}$.
+* **Hard-margin SVM:** $\min_{\mathbf w,b}\tfrac12\|\mathbf w\|_2^2$ subject to those constraints; **support vectors** are the points on the curbs.
+* **Lagrangian:** $\mathcal L=f+\lambda c$; set $\nabla_{\boldsymbol\theta}\mathcal L=\mathbf 0$ and $\partial\mathcal L/\partial\lambda=c=0$ (equality case). Inequalities: $\mathcal L=f-\lambda c$ with $\lambda\ge0$ and KKT.
+* **Soft-margin SVM:** $\min\tfrac12\|\mathbf w\|^2+C\sum\xi_i$ s.t. $y_i(\mathbf x_i^\top\mathbf w-b)\ge1-\xi_i$, $\xi_i\ge0$; always solvable; $\xi_i=\max(0,1-y_i(\mathbf x_i^\top\mathbf w-b))$ (hinge loss); $\xi_i>1$ means misclassified.
+* **$C$:** large = narrow street, few violations (variance); small = wide street, more violations (bias).
+
+---
 ## Part D. Glossary
 
 Entries are alphabetical; the lecture where the idea appears is in brackets.
@@ -3766,6 +3959,20 @@ Entries are alphabetical; the lecture where the idea appears is in brackets.
 * **autodiff**: gradients computed by chain rule over a forward/backward pass (L18)
 * **heteroscedastic**: noise variance depends on the input (L19)
 
+**Added with Lecture 20:**
+
+* **SVM (support vector machine)**: classifier $\text{sign}(\mathbf x^\top\mathbf w-b)$ with the widest possible margin (L20)
+* **margin $d$**: width of the empty street around the boundary, $d=2/\|\mathbf w\|$ (L20)
+* **support vector**: a point exactly on a margin line; only these points fix the SVM solution (L20)
+* **projection / shadow**: length of $\mathbf a$ along $\mathbf b$, $\mathbf a^\top\mathbf b/\|\mathbf b\|$ (L20)
+* **signed distance to the boundary**: $(\mathbf x^\top\mathbf w-b)/\|\mathbf w\|$ (L20)
+* **constrained optimization**: minimize $f(\boldsymbol\theta)$ subject to $c(\boldsymbol\theta)\ge0$ or $=0$ (L20)
+* **Lagrangian / Lagrange multiplier**: $\mathcal L=f+\lambda c$; a stationary point gives $\nabla f+\lambda\nabla c=\mathbf0$ and $c=0$ (L20)
+* **KKT conditions**: inequality-constraint version: $\lambda\ge0$ and $\lambda c=0$ (L20, textbook)
+* **slack variable $\xi_i$**: how far point $i$ may violate its margin; $\xi_i>1$ means misclassified (L20)
+* **soft margin / $C$**: $\min\frac12\|\mathbf w\|^2+C\sum\xi_i$; large $C$ gives a narrow street, small $C$ a wide one (L20)
+* **hinge loss**: $\max(0,1-y(\mathbf x^\top\mathbf w-b))$; zero beyond the margin (L20)
+
 
 ## Part E. Formula sheet
 
@@ -3829,6 +4036,14 @@ Entries are alphabetical; the lecture where the idea appears is in brackets.
 * Midterm example: $\mu=\theta_1^\top\phi$, $\sigma^2=\exp(\theta_2^\top\phi)$; $\mathcal L=\sum[\frac12\theta_2^\top\phi+\frac{r^2}{2e}]$; $\nabla_{\theta_1}=\sum-\frac re\phi$, $\nabla_{\theta_2}=\sum(\frac12-\frac{r^2}{2e})\phi$.
 * Poisson regression: $\lambda=\exp(\theta^\top\phi)$, $\mathcal L=\sum[\lambda_i-k_i\log\lambda_i]$, $\nabla=\sum(\lambda_i-k_i)\phi_i$.
 * Sheet identities: $\log ab=\log a+\log b$, $\log a^b=b\log a$, $\log\exp x=x$, $p(a,b)=p(a|b)p(b)$, Bayes.
+
+### E.11 Support vector machines (L20)
+* Projection: $\mathbf a^\top\mathbf b=\|\mathbf a\|\|\mathbf b\|\cos\theta$; shadow of $\mathbf a$ on $\mathbf b$ $=\mathbf a^\top\mathbf b/\|\mathbf b\|$.
+* Boundary $\mathbf x^\top\mathbf w=b$; margins $\mathbf x^\top\mathbf w=b\pm1$; signed distance $(\mathbf x^\top\mathbf w-b)/\|\mathbf w\|$; origin-to-boundary $b/\|\mathbf w\|$; margin $d=2/\|\mathbf w\|$.
+* Hard margin: $\min_{\mathbf w,b}\frac12\|\mathbf w\|^2$ s.t. $y_i(\mathbf x_i^\top\mathbf w-b)\ge1$, $y_i\in\{-1,+1\}$.
+* Soft margin: $\min\frac12\|\mathbf w\|^2+C\sum\xi_i$ s.t. $y_i(\mathbf x_i^\top\mathbf w-b)\ge1-\xi_i$, $\xi_i\ge0$; $\xi_i=\max(0,1-y_i(\mathbf x_i^\top\mathbf w-b))$.
+* Lagrangian (equality): $\mathcal L=f+\lambda c$, $\nabla_{\boldsymbol\theta}\mathcal L=\mathbf0$, $\partial\mathcal L/\partial\lambda=c=0$. Inequality $c\ge0$: $\mathcal L=f-\lambda c$, $\lambda\ge0$, $\lambda c=0$.
+* Running example: nine students (drop $h=5$) separable by $w=2$, $b=7$, margin 1; all ten: $C=1$ gives $w=\frac23$, $b=3$, boundary $h=4.5$, margin 3, objective 2.889.
 
 ### E.9 Running-example numbers (to sanity-check your code)
 | Quantity | Value |
@@ -4086,7 +4301,7 @@ Every item below was checked against the file itself (slides re-viewed as images
 | 22 | Murphy §10.3.2.4 and Ex 10.1c | Multinomial-logistic Hessian "positive definite" | $\text{diag}(\boldsymbol\mu)-\boldsymbol\mu\boldsymbol\mu^\top$ has a zero eigenvalue (vector of ones) so the full Hessian is only **positive semi-definite** until one class's weights are fixed to 0 (Lecture 09 proof). Convexity still holds | M |
 | 23 | Murphy §10.2.3.4, Eq. 10.25 (p.344) | Writes $\|\cdot\|^2>0$ and concludes "strictly convex" | Needs $\mathbf S^{1/2}\mathbf X\mathbf v\ne\mathbf 0$ for $\mathbf v\ne\mathbf0$, i.e. $\mathbf X$ must have full column rank; otherwise only $\ge0$ (convex, not strictly) | T |
 
-### G.2b Lecture slides added with Lectures 16–19
+### G.2b Lecture slides added with Lectures 16–20
 
 | # | Where | What the source says | What is right | Sev. |
 |---|---|---|---|---|
@@ -4097,6 +4312,10 @@ Every item below was checked against the file itself (slides re-viewed as images
 | 28 | L17 slide 22 | Mask wording/figure | Decoder LMs use a causal mask (hide the future); check which direction the figure zeroes | M |
 | 29 | L18 slide 7 | Function stays "underneath (or above)" a line | For convex functions the chord lies above the curve | T |
 | 30 | L19 midterm example | Loss $\sum\frac{r^2}{2\exp(\theta_2^\top\phi)}$, and $\sigma^2$ called "std. dev." | Keep $\frac12\theta_2^\top\phi$ (from $\log\sigma$); $\sigma^2$ is the variance | E |
+| 31 | L20 margin page | "$\mathbf x_i^\top\mathbf w$ quantifies the distance to the decision boundary" | Only proportional to it; the signed distance is $(\mathbf x^\top\mathbf w-b)/\|\mathbf w\|$ | M |
+| 32 | L20 Lagrangian | Constraint $c\ge0$, $\mathcal L=f+\lambda c$, $\arg\min$ over $(\boldsymbol\theta,\lambda)$, then solves $c=0$ | Exact only for an equality constraint. For $c\ge0$ use $\mathcal L=f-\lambda c$, $\lambda\ge0$ (min over $\boldsymbol\theta$, max over $\lambda$) and KKT ($\lambda c=0$) | M |
+| 33 | L20 gradient of the Lagrangian | Vector entries written $\partial f/\partial\theta_i$ and $\partial f/\partial\lambda$ | Should be $\partial\mathcal L/\partial\theta_i$ and $\partial\mathcal L/\partial\lambda$ | T |
+| 34 | L20 soft-margin page | $C$ appears without a definition; "we can always find some solution" | $C>0$ is the price of slack; a solution always exists because $\xi_i$ can be as large as needed | M |
 
 ### G.3 Things that are *not* errors but easy to misread
 * Murphy writes the RSS with a factor $\frac12$ and no $1/D$; the slides use $\frac1D$. Same minimizer.
@@ -4108,4 +4327,3 @@ Every item below was checked against the file itself (slides re-viewed as images
 * Lecture 14's "$\lambda$" depends on how the loss is scaled (MSE vs RSS vs $\frac12$RSS): the shapes of the paths are the same but the numeric $\lambda$ values differ by factors of $N$ and 2. The notes state which form each number uses.
 
 ---
-

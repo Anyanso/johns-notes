@@ -1,6 +1,6 @@
 # CMPT 423 Study Hub
 
-A static website for the course: midterm prep, study notes (Lectures 02–19) and a plain-language "Explain it simply" dropdown inside every lecture.
+A static website for the course: midterm prep, study notes (Lectures 02–20) and a plain-language "Explain it simply" dropdown inside every lecture.
 
 Live site (after step 3 below): `https://<your-github-username>.github.io/<repo-name>/`
 
