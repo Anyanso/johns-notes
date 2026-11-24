@@ -172,18 +172,18 @@ footer{margin-top:40px;color:var(--muted);font-size:.88rem;border-top:1px solid 
 <header class="bar"><span class="nm">CMPT 423 Final Exam Prep</span><nav aria-label="Sections"><a href="#plan">Plan</a><a href="#recipe">Recipe</a><a href="#walkthrough">Walkthrough</a><a href="#memorize">Memorize</a><a href="#topics">Topics</a><a href="#practice">Practice</a><a href="#mock">Mock exam</a><a href="#ready">Am I ready?</a></nav><span class="prog" id="prog" aria-live="polite"></span></header>
 
 <section class="hero">
-<div class="eyebrow">Final exam · Wednesday 9 December · 9:00 AM · WPT 130–132</div>
+<div class="eyebrow">Final exam · Wednesday 9 December · 9:00 AM – 12:00 PM · WPT 130–132</div>
 <h1>The whole course, one method.</h1>
 <p class="lead">Every topic from Lectures 02–20, each with a short lesson, a must-know list and around ten practice questions with numbered, step-by-step solutions (123 in all), plus a full-length mock exam and an “Am I ready?” check at the end. Work through it, mark each question, and the page tells you when you are ready.</p>
 <ul class="facts">
 <li><small>Time left</small><strong id="cd">–</strong></li>
-<li><small>Format</small><strong>On paper, individual</strong></li>
+<li><small>Format</small><strong>3 hours, on paper, individual</strong></li>
 <li><small>Allowed</small><strong>Simple calculator</strong></li>
 <li><small>Counts for</small><strong>40% of the course</strong></li>
 </ul>
 </section>
 
-<div class="upd"><strong>What we know (Nov 24).</strong> The final is on <u>Wednesday, December 9, at 9:00 AM in WPT 130–132</u> (exam schedule). From the syllabus: in person, on paper, <u>individual</u>, worth 40%, multiple choice or long answer, and only a simple calculator is allowed. The exact scope and whether a reference sheet is given are <u>not announced yet</u>. This guide assumes the final is cumulative (Lectures 02–20, plus any later lectures) and that a sheet like the midterm’s is provided. The midterm’s limits (no sequence models, no gradient derivations) applied to the midterm only, so both are included here.</div>
+<div class="upd"><strong>What we know (Nov 24).</strong> The final is on <u>Wednesday, December 9, at 9:00 AM in WPT 130–132</u>, and it is <u>3 hours long</u> (9:00–12:00). From the syllabus: in person, on paper, <u>individual</u>, worth 40%, multiple choice or long answer, and only a simple calculator is allowed. The exact scope and whether a reference sheet is given are <u>not announced yet</u>. This guide assumes the final is cumulative (Lectures 02–20, plus any later lectures) and that a sheet like the midterm’s is provided. The midterm’s limits (no sequence models, no gradient derivations) applied to the midterm only, so both are included here.</div>
 <section class="blk" id="evidence"><h2>What the exam will look like</h2>
 <p class="sub">A reading of the evidence you have, not a leak of the paper. Be ready for each of these.</p>
 <div class="ev">
@@ -277,12 +277,12 @@ $$J(\boldsymbol\theta)=-\sum_{i=1}^{D}\Big[k_i\log p_i+(10-k_i)\log(1-p_i)\Big],
 
 <section class="blk" id="mock"><h2>Mock exam</h2>
 <p class="sub"><!--MOCKINTRO--></p>
-<div class="clock"><span id="clk">150:00</span><button type="button" class="pl" id="go">Start</button><button type="button" class="pl" id="rs">Reset</button></div>
-<h3 style="margin:6px 0 8px;font-size:1.2rem">Part 1: multiple choice (15 marks)</h3>
+<div class="clock"><span id="clk">180:00</span><button type="button" class="pl" id="go">Start</button><button type="button" class="pl" id="rs">Reset</button></div>
+<h3 style="margin:6px 0 8px;font-size:1.2rem">Part 1: multiple choice (20 marks)</h3>
 <div id="mcs"><!--MC--></div><p class="score" id="mcscore"></p>
-<h3 style="margin:14px 0 8px;font-size:1.2rem">Part 2: long answer (85 marks)</h3>
+<h3 style="margin:14px 0 8px;font-size:1.2rem">Part 2: long answer (100 marks)</h3>
 <!--LONG-->
-<p style="margin-top:12px"><label style="display:flex;gap:10px;align-items:center;cursor:pointer"><input type="checkbox" data-k="ready-mock"> I sat the full mock, timed, and scored 70 or more out of 100 with the marking notes.</label></p>
+<p style="margin-top:12px"><label style="display:flex;gap:10px;align-items:center;cursor:pointer"><input type="checkbox" data-k="ready-mock"> I sat the full 3-hour mock, timed, and scored 84 or more out of 120 (70%) with the marking notes.</label></p>
 </section>
 
 <section class="blk" id="ready"><h2>Am I ready?</h2>
@@ -322,7 +322,7 @@ $$J(\boldsymbol\theta)=-\sum_{i=1}^{D}\Big[k_i\log p_i+(10-k_i)\log(1-p_i)\Big],
 <ul class="rchk">
 <li><label><input type="checkbox" data-k="ready-f1"><span>I redid every midterm question I lost marks on.</span></label></li>
 <li><label><input type="checkbox" data-k="ready-f2"><span>I read the common mistakes in every topic card and the costly mistakes under the recipe.</span></label></li>
-<li><label><input type="checkbox" data-k="ready-f3"><span>I know the exam is Wed Dec 9 at 9:00 AM in WPT 130–132, I know where that room is, and I have a pencil, eraser, simple calculator and student ID ready.</span></label></li>
+<li><label><input type="checkbox" data-k="ready-f3"><span>I know the exam is Wed Dec 9, 9:00 AM – 12:00 PM (3 hours) in WPT 130–132, I know where that room is, and I have a pencil, eraser, simple calculator and student ID ready.</span></label></li>
 </ul>
 <footer>Made from the CMPT 423 lectures (02–20), the assignments, the midterm example and Murphy (2022) and Bishop (2006). Check anything you doubt against the Complete Study Notes and your own slides. The <a href="midterm.html">midterm prep page</a> is archived.</footer>
 
@@ -377,7 +377,7 @@ mcs.forEach(function(m){m.addEventListener('click',function(e){var b=e.target.cl
   m.querySelector('.why').hidden=false;
   document.getElementById('mcscore').textContent=sc+' / '+mcs.length+' correct so far ('+done+' answered)'})});
 // timer
-var MOCKSEC=9000,left=MOCKSEC,iv=null,clk=document.getElementById('clk'),go=document.getElementById('go');
+var MOCKSEC=10800,left=MOCKSEC,iv=null,clk=document.getElementById('clk'),go=document.getElementById('go');
 function show(){var m=Math.floor(left/60),s=left%60;clk.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;clk.classList.toggle('low',left<=300)}
 go.addEventListener('click',function(){if(iv){clearInterval(iv);iv=null;go.textContent='Resume';return}
   go.textContent='Pause';iv=setInterval(function(){left--;show();if(left<=0){clearInterval(iv);iv=null;go.textContent='Start'}},1000)});

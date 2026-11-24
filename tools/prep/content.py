@@ -18,8 +18,8 @@ DAYS = [
   "Topics 8, 9 and 11 (MAP/ridge/lasso, neural networks, gradient descent). Practice groups H, I, J.",
   "Topic 12 (the L19 example) and a second pass through groups K and L.",
  ]),
- ("Sun Dec 6", "3 h", "Full mock exam", [
-  "Sit the mock exam alone, on paper, with a simple calculator, timed (150 minutes), ideally in the morning like the real exam.",
+ ("Sun Dec 6", "3.5 h", "Full mock exam", [
+  "Sit the mock exam alone, on paper, with a simple calculator, timed for the full 3 hours, starting at 9:00 like the real exam.",
   "Mark it with the marking notes. Every lost mark goes on a list.",
  ]),
  ("Mon Dec 7", "3 h", "Close every gap", [
@@ -177,8 +177,8 @@ from questions import GROUPS, Q
 BONUS=set()
 
 # ---------------- Mock exam ----------------
-MOCK_INTRO = r"""Sit this alone, on paper, with a simple calculator and only a reference sheet like the midterm’s (seven distributions and seven identities). 150 minutes, 100 marks. Cover the answers. Then mark yourself with the marking notes; 70 or more is a strong result."""
-MOCK_MINUTES = 150
+MOCK_INTRO = r"""Sit this alone, on paper, with a simple calculator and only a reference sheet like the midterm’s (seven distributions and seven identities). 180 minutes, 120 marks: the same length as the real exam, at about 1.5 minutes per mark. Cover the answers. Then mark yourself with the marking notes; 84 or more (70%) is a strong result."""
+MOCK_MINUTES = 180
 
 MOCK_MC = [
  (r"Which distribution suits ‘minutes until the next bus arrives’ (positive, not bounded)?", ["Poisson","Normal","Weibull","Binomial"], 2, "A positive duration: Weibull (the Poisson is for counts)."),
@@ -196,6 +196,11 @@ MOCK_MC = [
  (r"The Markov assumption says", ["all states are equally likely","the future is independent of the past given the present","the sequence is i.i.d.","the transition matrix is symmetric"], 1, r"$p(X_{t+1}|X_{0:t})=p(X_{t+1}|X_t)$."),
  (r"Transformers need positional encodings because", ["softmax is unstable","attention by itself ignores token order","they have no hidden layers","they are trained by MAP"], 1, "A weighted sum of values does not change when the inputs are shuffled."),
  (r"An LLM is trained by", ["maximizing the likelihood of the next token (cross-entropy)","minimizing the hinge loss","k-means clustering","maximizing the margin"], 0, r"$\boldsymbol\theta^*=\arg\max p(\mathcal D|\boldsymbol\theta)$ with teacher forcing."),
+ (r"<code>X</code> has shape $(50,4)$. The shape of <code>X.T @ X</code> is", [r"$(50,50)$",r"$(4,4)$",r"$(4,50)$","an error"], 1, r"$(4,50)@(50,4)\to(4,4)$."),
+ (r"TP $=30$, FP $=10$, FN $=20$. Precision is", ["0.6","0.75","0.5","0.4"], 1, r"$30/(30+10)$."),
+ (r"10-fold cross-validation on 200 points trains each model on", ["20 points","100 points","180 points","200 points"], 2, r"$9/10$ of the data."),
+ (r"Dropout with drop probability $0.2$. At test time the activations are multiplied by", ["0.2","0.8","1.25","1"], 1, "The keep probability $1-p$."),
+ (r"softmax$(0,0)$ equals", [r"$(0,0)$",r"$(1,0)$",r"$(0.5,0.5)$",r"$(1,1)$"], 2, r"$e^0/(e^0+e^0)$ for each."),
 ]
 
 MOCK_LONG = [
@@ -239,6 +244,13 @@ MOCK_LONG = [
 <li>(c) NLLs $0.693,0.916,0.223,1.386$; total $3.219$; per token $0.805$; perplexity $e^{0.805}=2.24$.</li>
 <li>(d) In training we know the whole target, so we feed the true previous tokens instead of the model’s own samples and compute all positions in one pass. A causal mask stops each position from seeing the token it must predict.</li></ol>
 <p><em>Marking:</em> (b) −2 if the scores are not scaled by $\sqrt d$ (accept a stated alternative constant).</p>"""),
+ ("Long answer 6 (15 marks): Gaussians, sampling and Bayes",
+  r"""(a) Fit a 2-D Gaussian by maximum likelihood to $(0,1),(2,3),(4,2)$: mean and covariance (5). (b) For $\Sigma=\begin{bmatrix}4&2\\2&2\end{bmatrix}$ find the Cholesky factor and turn $\mathbf z=(1,2)$ into a sample with mean $(2,2)$ (5). (c) Two clusters have means $(2,2)$ and $(6,6)$; assign $(3,3)$ with squared distances (2). (d) A point has likelihood $0.2$ under class A and $0.05$ under class B; the priors are $0.3$ and $0.7$. Find $P(A|\mathbf x)$ (3).""",
+  r"""<ol class="steps"><li>(a) Mean $(2,2)$. Centred points $(-2,-1),(0,1),(2,0)$; outer products sum to $\begin{bmatrix}8&2\\2&2\end{bmatrix}$; divide by 3: $\Sigma=\begin{bmatrix}2.667&0.667\\0.667&0.667\end{bmatrix}$.</li>
+<li>(b) $L_{11}=\sqrt4=2$, $L_{21}=2/2=1$, $L_{22}=\sqrt{2-1}=1$: $\mathbf L=\begin{bmatrix}2&0\\1&1\end{bmatrix}$. $\mathbf L\mathbf z=(2,\,1+2)=(2,3)$; sample $=(2,2)+(2,3)=(4,5)$.</li>
+<li>(c) $\|(3,3)-(2,2)\|^2=2$; $\|(3,3)-(6,6)\|^2=18$: cluster 1.</li>
+<li>(d) $p(\mathbf x)=0.2(0.3)+0.05(0.7)=0.095$; $P(A|\mathbf x)=0.06/0.095=0.632$.</li></ol>
+<p><em>Marking:</em> −2 for dividing by $n-1$ in (a); −2 for $\mathbf z\mathbf L$ instead of $\mathbf L\mathbf z$ in (b).</p>"""),
 ]
 
 MISTAKES = [
