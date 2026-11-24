@@ -172,7 +172,7 @@ footer{margin-top:40px;color:var(--muted);font-size:.88rem;border-top:1px solid 
 <header class="bar"><span class="nm">CMPT 423 Final Exam Prep</span><nav aria-label="Sections"><a href="#plan">Plan</a><a href="#recipe">Recipe</a><a href="#walkthrough">Walkthrough</a><a href="#memorize">Memorize</a><a href="#topics">Topics</a><a href="#practice">Practice</a><a href="#mock">Mock exam</a><a href="#ready">Am I ready?</a></nav><span class="prog" id="prog" aria-live="polite"></span></header>
 
 <section class="hero">
-<div class="eyebrow">Final exam · date and room to be announced · individual · 40%</div>
+<div class="eyebrow">Final exam · Wednesday 9 December · 9:00 AM · WPT 130–132</div>
 <h1>The whole course, one method.</h1>
 <p class="lead">Every topic from Lectures 02–20, each with a short lesson, a must-know list and around ten practice questions with numbered, step-by-step solutions (123 in all), plus a full-length mock exam and an “Am I ready?” check at the end. Work through it, mark each question, and the page tells you when you are ready.</p>
 <ul class="facts">
@@ -183,7 +183,7 @@ footer{margin-top:40px;color:var(--muted);font-size:.88rem;border-top:1px solid 
 </ul>
 </section>
 
-<div class="upd"><strong>What we know (Nov 24).</strong> From the syllabus: the final is in person, on paper, <u>individual</u>, worth 40%, multiple choice or long answer, and only a simple calculator is allowed. The date, room, exact scope and whether a reference sheet is given are <u>not announced yet</u>. This guide assumes the final is cumulative (Lectures 02–20, plus any later lectures) and that a sheet like the midterm’s is provided. The midterm’s limits (no sequence models, no gradient derivations) applied to the midterm only, so both are included here. Update this when your professor announces details.</div>
+<div class="upd"><strong>What we know (Nov 24).</strong> The final is on <u>Wednesday, December 9, at 9:00 AM in WPT 130–132</u> (exam schedule). From the syllabus: in person, on paper, <u>individual</u>, worth 40%, multiple choice or long answer, and only a simple calculator is allowed. The exact scope and whether a reference sheet is given are <u>not announced yet</u>. This guide assumes the final is cumulative (Lectures 02–20, plus any later lectures) and that a sheet like the midterm’s is provided. The midterm’s limits (no sequence models, no gradient derivations) applied to the midterm only, so both are included here.</div>
 <section class="blk" id="evidence"><h2>What the exam will look like</h2>
 <p class="sub">A reading of the evidence you have, not a leak of the paper. Be ready for each of these.</p>
 <div class="ev">
@@ -194,7 +194,7 @@ footer{margin-top:40px;color:var(--muted);font-size:.88rem;border-top:1px solid 
 </div></section>
 
 <section class="blk" id="plan"><h2>Your study plan</h2>
-<p class="sub">Tick items as you go; the boxes remember your progress on this device. When the exam date is announced, fit the last three phases into the days before it.</p>
+<p class="sub">Tick items as you go; the boxes remember your progress on this device. The plan is dated back from the exam on Wednesday, December 9.</p>
 <div class="days"><!--PLAN--></div></section>
 
 <section class="blk" id="recipe"><h2>The answer template</h2>
@@ -322,7 +322,7 @@ $$J(\boldsymbol\theta)=-\sum_{i=1}^{D}\Big[k_i\log p_i+(10-k_i)\log(1-p_i)\Big],
 <ul class="rchk">
 <li><label><input type="checkbox" data-k="ready-f1"><span>I redid every midterm question I lost marks on.</span></label></li>
 <li><label><input type="checkbox" data-k="ready-f2"><span>I read the common mistakes in every topic card and the costly mistakes under the recipe.</span></label></li>
-<li><label><input type="checkbox" data-k="ready-f3"><span>I know the exam date, time, room and what I may bring.</span></label></li>
+<li><label><input type="checkbox" data-k="ready-f3"><span>I know the exam is Wed Dec 9 at 9:00 AM in WPT 130–132, I know where that room is, and I have a pencil, eraser, simple calculator and student ID ready.</span></label></li>
 </ul>
 <footer>Made from the CMPT 423 lectures (02–20), the assignments, the midterm example and Murphy (2022) and Bishop (2006). Check anything you doubt against the Complete Study Notes and your own slides. The <a href="midterm.html">midterm prep page</a> is archived.</footer>
 
@@ -364,7 +364,7 @@ document.getElementById('openall').addEventListener('click',function(){[].forEac
 document.getElementById('closeall').addEventListener('click',function(){[].forEach.call(document.querySelectorAll('.topic'),function(d){d.open=false})});
 // links to a topic's drill open the practice list
 // countdown: set EXAM to the start time once it is announced, e.g. Date.UTC(2026,11,10,15,0)
-var EXAM=null;
+var EXAM=Date.UTC(2026,11,9,15,0); // Wed 9 Dec 2026, 9:00 CST (UTC-6)
 function cd(){var el=document.getElementById('cd');if(!EXAM){el.textContent='Date TBA';return}
   var t=EXAM-Date.now();if(t<=0){el.textContent='Exam time';return}
   var d=Math.floor(t/864e5),h=Math.floor(t%864e5/36e5);el.textContent=d+' d '+h+' h'}

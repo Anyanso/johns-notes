@@ -2,32 +2,34 @@
 # Content for the final exam prep site. $...$ = math (pre-rendered by KaTeX).
 
 DAYS = [
- ("Now → Dec 3", "3–4 h a week", "Close the new material and the midterm", [
+ ("Tue Nov 24 – Sun Nov 29", "2–3 h a day", "New material, your midterm, and the foundations", [
   "Get your marked midterm back. Redo every question you lost marks on, from a blank page, until you can do it without looking.",
   "Learn the two topics the midterm skipped: card 10 (sequence models, L16–17) and card 13 (SVMs, L20). Then practice groups K and L.",
-  "Add each new lecture (e.g. PCA in week 12) to your notes as it is posted.",
-  "Finish Assignment 3 (due Thu Dec 3, 4 pm). Assignment questions are the closest replica of exam questions.",
- ]),
- ("After A3 is in", "1–2 h a day", "Rebuild the foundations", [
   "Topics 1–4 (tensors, probability, MLE, linear algebra). Read each card, then practice groups C, D, B.",
+  "Add any new lecture (e.g. PCA) to your notes as it is posted.",
+ ]),
+ ("Mon Nov 30 – Thu Dec 3", "A3 first, then 1 h a day", "Assignment 3, then regression and classification", [
+  "Finish Assignment 3 (due Thu Dec 3, 4 pm). Assignment questions are the closest replica of exam questions.",
   "Topics 5–7 (regression, logistic/softmax, generalization). Practice groups E, F, G.",
-  "Topics 8 (MAP, ridge, lasso) and 9 (neural networks). Practice groups H, I.",
   "Mark every question Got it or Review. The readiness panel at the bottom counts them for you.",
  ]),
- ("Final week", "2–3 h a day", "The recipe, optimization, and a full mock", [
+ ("Fri Dec 4 – Sat Dec 5", "3–4 h a day", "The recipe, regularization, networks, optimization", [
   "Practice group A, all of it, on paper: the recipe is the most likely long-answer question.",
-  "Topics 11–13 (gradient descent, the L19 example, SVMs). Practice groups J and L again.",
-  "Sit the mock exam alone, on paper, with a simple calculator, timed (150 minutes). Mark it with the marking notes.",
-  "Every lost mark goes on a list. Redo those questions two days later.",
+  "Topics 8, 9 and 11 (MAP/ridge/lasso, neural networks, gradient descent). Practice groups H, I, J.",
+  "Topic 12 (the L19 example) and a second pass through groups K and L.",
  ]),
- ("Last two days", "2 h a day", "Close every gap", [
-  "Redo every question still marked Review until the readiness panel shows each group at 80% or more.",
+ ("Sun Dec 6", "3 h", "Full mock exam", [
+  "Sit the mock exam alone, on paper, with a simple calculator, timed (150 minutes), ideally in the morning like the real exam.",
+  "Mark it with the marking notes. Every lost mark goes on a list.",
+ ]),
+ ("Mon Dec 7", "3 h", "Close every gap", [
+  "Fix the mock list, then redo every question still marked Review until every group in the readiness panel is green.",
   "From a blank page, derive the losses for Poisson, Bernoulli, Normal (fixed and learned variance), Binomial and Weibull, and write the soft-margin SVM.",
   "Read the common mistakes list in every topic card and the ten costly mistakes under the recipe.",
  ]),
- ("Day before", "1 h", "Light review, then rest", [
+ ("Tue Dec 8 · day before", "1 h", "Light review, then rest", [
   "Skim the ‘What to memorize’ list once. Do not start anything new.",
-  "Pack: pencil, eraser, simple calculator with fresh batteries, student ID. Sleep.",
+  "Check where WPT 130–132 is. Pack: pencil, eraser, simple calculator with fresh batteries, student ID. Sleep early: the exam starts at 9:00.",
  ]),
 ]
 
